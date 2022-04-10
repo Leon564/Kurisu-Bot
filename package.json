@@ -1,0 +1,24 @@
+{
+  "name": "kurisu-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leon564/Kurisu-Bot.git"
+  },
+  "keywords": [],
+  "author": "Leon564",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Leon564/Kurisu-Bot/issues"
+  },
+  "homepage": "https://github.com/Leon564/Kurisu-Bot#readme",
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.1.0"
+  }
+}
