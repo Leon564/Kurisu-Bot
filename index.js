@@ -1,5 +1,5 @@
 const makeWASocket = require("@adiwajshing/baileys");
-const { messageHandler } = require("./message");
+const messageHandler = require("./message");
 const { state, saveState } = makeWASocket.useSingleFileAuthState(
   "./auth_info_multi.json"
 );
