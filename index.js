@@ -1,5 +1,5 @@
 const makeWASocket = require("@adiwajshing/baileys");
-
+const { messageHandler } = require("./message");
 const { state, saveState } = makeWASocket.useSingleFileAuthState(
   "./auth_info_multi.json"
 );
@@ -36,6 +36,7 @@ async function connectToWhatsApp() {
   sock.ev.on("messages.upsert", async ({ messages }) => {
     const m = messages[0];
     if (!m.message) return;
+    messageHandler(m, sock);
   });
 }
 // run in main file

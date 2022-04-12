@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Leon564/Kurisu-Bot#readme",
   "dependencies": {
-    "@adiwajshing/baileys": "^4.1.0"
+    "@adiwajshing/baileys": "^4.1.0",
+    "qrcode-terminal": "^0.12.0"
   }
 }
