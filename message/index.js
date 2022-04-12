@@ -1,0 +1,1 @@
+exports.messageHandler = require("./messageHandler");
