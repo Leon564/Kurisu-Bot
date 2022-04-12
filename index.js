@@ -1,7 +1,7 @@
 const makeWASocket = require("@adiwajshing/baileys");
-const messageHandler = require("./message");
+const { messageHandler } = require("./message");
 const { state, saveState } = makeWASocket.useSingleFileAuthState(
-  "./config/auth_info_multi.json"
+  "./auth_info_multi.json"
 );
 
 async function connectToWhatsApp() {

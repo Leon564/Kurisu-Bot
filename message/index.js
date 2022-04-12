@@ -1,1 +1,1 @@
-module.exports = require("./messageHandler");
+exports.messageHandler = require("./messageHandler");
