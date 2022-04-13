@@ -1,15 +1,19 @@
+const { prefix } = require("../config");
 module.exports = (m) => {
   let messageType = Object.keys(m.message)[0];
 
   let message = null;
   let lowerMessage = null;
+  let outCommandMessage = null;
   let outPrefixMessage = null;
+  let outPrefixMessageLower = null;
   let args = null;
   let media = null;
   let canonicalUrl = null;
   let mentions = null;
   let command = null;
-
+  let outCommandMessageLower = null;
+  let isCommand = null;
   var from = m.key.remoteJid;
   const isGroup = from.includes("g.us");
 
@@ -66,16 +70,23 @@ module.exports = (m) => {
       }
     }
   }
+
   lowerMessage = message ? message.toLocaleLowerCase() : null;
+  outPrefixMessage = message ? message.replace(prefix, "") : null;
+  outPrefixMessageLower = outPrefixMessage
+    ? outPrefixMessage.toLocaleLowerCase()
+    : null;
   command = lowerMessage ? lowerMessage.split(" ")[0].slice(1) : null;
-  outPrefixMessageLower = lowerMessage
+  outCommandMessageLower = lowerMessage
     ? lowerMessage.substring(command.length + 2)
     : null;
-  outPrefixMessage = message
+  outCommandMessage = message
     ? message.slice(message.split(" ")[0].length + 1)
     : null;
-  args = outPrefixMessage ? outPrefixMessage.split(" ") : null;
-
+  args = outCommandMessage ? outCommandMessage.split(" ") : null;
+  args = args ? args.filter((arg) => arg !== "") : null;
+  isCommand = lowerMessage ? lowerMessage.startsWith(prefix) : null;
+  
   return {
     messageType,
     message,
@@ -83,11 +94,14 @@ module.exports = (m) => {
     mentions,
     outPrefixMessage,
     outPrefixMessageLower,
+    outCommandMessage,
+    outCommandMessageLower,
     lowerMessage,
     command,
     args,
     canonicalUrl,
     from,
     isGroup,
+    isCommand,
   };
 };
