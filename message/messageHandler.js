@@ -32,6 +32,17 @@ module.exports = async (m, conn) => {
       );
       break;
 
+    case "img":
+    case "image":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.stickers.stickerToImage(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+
     //memes
     case "meme":
       await kurisu.sendMessage(kurisu.from, await commands.fun.meme(), {
