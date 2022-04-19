@@ -59,5 +59,12 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+
+    //roll
+    case "roll":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.rollDice(), {
+        quoted: m,
+      });
+      break;
   }
 };
