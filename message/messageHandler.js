@@ -31,6 +31,15 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+    case "doge":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.stickers.doge(),
+        {
+          quoted: m,
+        }
+      );
+      break;
 
     case "img":
     case "image":
