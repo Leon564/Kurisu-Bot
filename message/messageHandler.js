@@ -42,7 +42,15 @@ module.exports = async (m, conn) => {
         }
       );
       break;
-
+    case "gif":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.stickers.stickerToGif(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
     //memes
     case "meme":
       await kurisu.sendMessage(kurisu.from, await commands.fun.meme(), {

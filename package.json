@@ -22,6 +22,7 @@
     "@adiwajshing/baileys": "^4.1.0",
     "axios": "^0.26.1",
     "dotenv": "^16.0.0",
+    "ezgif": "github:Leon564/ezgif-converter",
     "fetch-json": "^2.6.4",
     "node-fetch": "2.6",
     "path": "^0.12.7",
