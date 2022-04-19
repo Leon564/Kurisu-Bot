@@ -28,5 +28,10 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+    case "meme":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.meme(), {
+        quoted: m,
+      });
+      break;
   }
 };
