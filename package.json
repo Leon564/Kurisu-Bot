@@ -20,10 +20,13 @@
   "homepage": "https://github.com/Leon564/Kurisu-Bot#readme",
   "dependencies": {
     "@adiwajshing/baileys": "^4.1.0",
+    "axios": "^0.26.1",
     "dotenv": "^16.0.0",
     "fetch-json": "^2.6.4",
     "node-fetch": "2.6",
+    "path": "^0.12.7",
     "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.30.4",
     "ws-sticker-maker": "github:Leon564/ws-sticker-maker"
   }
 }
