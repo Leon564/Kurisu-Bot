@@ -9,6 +9,7 @@ module.exports = (m) => {
   let outPrefixMessageLower = null;
   let args = null;
   let media = null;
+  let mediaType = null;
   let canonicalUrl = null;
   let mentions = null;
   let command = null;
@@ -22,11 +23,14 @@ module.exports = (m) => {
   } else if (messageType == "imageMessage") {
     message = m.message.imageMessage.caption;
     media = m.message.imageMessage;
+    mediaType = "image";
   } else if (messageType == "videoMessage") {
     message = m.message.videoMessage.caption;
     media = m.message.videoMessage;
+    mediaType = "video";
   } else if (messageType == "stickerMessage") {
     media = m.message.stickerMessage;
+    mediaType = "sticker";
   } else if (
     messageType == "listResponseMessage" ||
     messageType == "messageContextInfo"
@@ -66,6 +70,25 @@ module.exports = (m) => {
             m.message.extendedTextMessage.contextInfo.quotedMessage
               .stickerMessage;
           messageType = "stickerMessage";
+          mediaType = "sticker";
+        }
+        if (
+          m.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage
+        ) {
+          media =
+            m.message.extendedTextMessage.contextInfo.quotedMessage
+              .imageMessage;
+          messageType = "imageMessage";
+          mediaType = "image";
+        }
+        if (
+          m.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage
+        ) {
+          media =
+            m.message.extendedTextMessage.contextInfo.quotedMessage
+              .videoMessage;
+          messageType = "videoMessage";
+          mediaType = "video";
         }
       }
     }
@@ -86,7 +109,7 @@ module.exports = (m) => {
   args = outCommandMessage ? outCommandMessage.split(" ") : null;
   args = args ? args.filter((arg) => arg !== "") : null;
   isCommand = lowerMessage ? lowerMessage.startsWith(prefix) : null;
-  
+
   return {
     messageType,
     message,
@@ -103,5 +126,6 @@ module.exports = (m) => {
     from,
     isGroup,
     isCommand,
+    mediaType,
   };
 };
