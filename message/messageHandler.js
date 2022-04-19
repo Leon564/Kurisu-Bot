@@ -52,5 +52,12 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+
+    //8ball
+    case "8ball":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.ball8(kurisu), {
+        quoted: m,
+      });
+      break;
   }
 };
