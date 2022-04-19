@@ -1,4 +1,3 @@
-const makeWASocket = require("@adiwajshing/baileys");
 const sorter = require("./sorter");
 const { commands } = require("../lib");
 
@@ -95,6 +94,12 @@ module.exports = async (m, conn) => {
       await kurisu.sendMessage(kurisu.from, await commands.fun.rollDice(), {
         quoted: m,
       });
+      break;
+
+    //youtube
+    case "music":
+      const result = await commands.youtube.youtubeToMp3(kurisu);
+      await kurisu.sendMessage(kurisu.from, result[0], result[1]);
       break;
   }
 };

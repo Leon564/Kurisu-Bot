@@ -24,10 +24,13 @@
     "dotenv": "^16.0.0",
     "ezgif": "github:Leon564/ezgif-converter",
     "fetch-json": "^2.6.4",
+    "fs-extra": "^10.1.0",
     "node-fetch": "2.6",
     "path": "^0.12.7",
     "qrcode-terminal": "^0.12.0",
+    "scrape-yt": "^1.4.8",
     "sharp": "^0.30.4",
-    "ws-sticker-maker": "github:Leon564/ws-sticker-maker"
+    "ws-sticker-maker": "github:Leon564/ws-sticker-maker",
+    "youtube-mp3-downloader": "^0.7.10"
   }
 }
