@@ -18,5 +18,15 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+    case "sticker":
+    case "stiker":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.stickers.stickermaker(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
   }
 };
