@@ -32,6 +32,17 @@ module.exports = async (m, conn) => {
       );
       break;
 
+    case "img":
+    case "image":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.stickers.stickerToImage(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+
     //memes
     case "meme":
       await kurisu.sendMessage(kurisu.from, await commands.fun.meme(), {
@@ -49,6 +60,20 @@ module.exports = async (m, conn) => {
     //hub
     case "hub":
       await kurisu.sendMessage(kurisu.from, await commands.fun.hub(kurisu), {
+        quoted: m,
+      });
+      break;
+
+    //8ball
+    case "8ball":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.ball8(kurisu), {
+        quoted: m,
+      });
+      break;
+
+    //roll
+    case "roll":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.rollDice(), {
         quoted: m,
       });
       break;
