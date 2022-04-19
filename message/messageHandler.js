@@ -11,6 +11,7 @@ module.exports = async (m, conn) => {
     : kurisu.user.id;
 
   switch (kurisu.command) {
+    //hola
     case "hola":
     case "hello":
     case "hi":
@@ -18,6 +19,8 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+
+    //stickers
     case "sticker":
     case "stiker":
       await kurisu.sendMessage(
@@ -28,8 +31,18 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+
+    //memes
     case "meme":
       await kurisu.sendMessage(kurisu.from, await commands.fun.meme(), {
+        quoted: m,
+      });
+      break;
+
+    //frase
+    case "frase":
+    case "f":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.phrase(), {
         quoted: m,
       });
       break;
