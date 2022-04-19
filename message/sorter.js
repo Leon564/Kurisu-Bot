@@ -107,7 +107,7 @@ module.exports = (m) => {
     ? message.slice(message.split(" ")[0].length + 1)
     : null;
   args = outCommandMessage ? outCommandMessage.split(" ") : null;
-  args = args ? args.filter((arg) => arg !== "") : null;
+  args = args ? args.filter((arg) => arg !== "") : [];
   isCommand = lowerMessage ? lowerMessage.startsWith(prefix) : null;
 
   return {

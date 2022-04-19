@@ -46,5 +46,11 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+    //hub
+    case "hub":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.hub(kurisu), {
+        quoted: m,
+      });
+      break;
   }
 };
