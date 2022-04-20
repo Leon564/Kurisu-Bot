@@ -117,6 +117,17 @@ module.exports = async (m, conn) => {
       await kurisu.sendMessage(kurisu.from, result[0], result[1]);
       break;
 
+    case "ms":
+    case "musicsearch":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.youtube.musicSearch(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+
     //anime
     case "anime":
       await kurisu.sendMessage(
