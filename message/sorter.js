@@ -17,7 +17,7 @@ module.exports = (m) => {
   let command = null;
   let outCommandMessageLower = null;
   let isCommand = null;
-  var from = m.key.remoteJid;
+  let from = m.key.remoteJid;
   const isGroup = from.includes("g.us");
 
   if (messageType == "conversation") {
