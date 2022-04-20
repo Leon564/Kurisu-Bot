@@ -136,5 +136,24 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+    case "character":
+    case "ch":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.anime.character.character(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+    case "characterid":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.anime.character.characterById(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
   }
 };
