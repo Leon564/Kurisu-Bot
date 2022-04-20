@@ -19,6 +19,11 @@ module.exports = async (m, conn) => {
       });
       break;
 
+    case "ping":
+      await kurisu.sendMessage(kurisu.from, commands.misc.ping(kurisu), {
+        quoted: m,
+      });
+      break;
     //stickers
     case "sticker":
     case "stiker":
@@ -110,6 +115,26 @@ module.exports = async (m, conn) => {
     case "music":
       const result = await commands.youtube.youtubeToMp3(kurisu);
       await kurisu.sendMessage(kurisu.from, result[0], result[1]);
+      break;
+
+    //anime
+    case "anime":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.anime.find.animeByName(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+    case "animeid":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.anime.find.animeById(kurisu),
+        {
+          quoted: m,
+        }
+      );
       break;
   }
 };

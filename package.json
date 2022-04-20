@@ -25,6 +25,7 @@
     "ezgif": "github:Leon564/ezgif-converter",
     "fetch-json": "^2.6.4",
     "fs-extra": "^10.1.0",
+    "moment-timezone": "^0.5.34",
     "node-fetch": "2.6",
     "path": "^0.12.7",
     "qrcode-terminal": "^0.12.0",
