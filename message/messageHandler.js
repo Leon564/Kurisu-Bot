@@ -166,6 +166,24 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+    case "news":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.anime.news.animeNews(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+    case "newsid":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.anime.news.newsById(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
 
     //speech
     case "speech":
