@@ -167,5 +167,17 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+
+    //lyrics
+    case "lyrics":
+    case "lyric":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.misc.lyrics(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
   }
 };
