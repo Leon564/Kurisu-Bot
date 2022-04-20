@@ -231,10 +231,26 @@ module.exports = async (m, conn) => {
       });
       break;
 
-      //webshots
+    //webshots
     case "webshot":
-      case "ws":
-      await kurisu.sendMessage(kurisu.from, await commands.misc.webshots(kurisu), {
+    case "ws":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.misc.webshots(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+
+    //movies
+    case "movie":
+      await kurisu.sendMessage(kurisu.from, await commands.movie.movieByName(kurisu), {
+        quoted: m,
+      });
+      break;
+    case "movieid":
+      await kurisu.sendMessage(kurisu.from, await commands.movie.movieById(kurisu), {
         quoted: m,
       });
       break;
