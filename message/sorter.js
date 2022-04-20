@@ -2,7 +2,8 @@ const { prefix } = require("../config");
 const makeWASocket = require("@adiwajshing/baileys");
 module.exports = (m) => {
   let messageType = Object.keys(m.message)[0];
-  let device=makeWASocket.getDevice(m.key.id);
+  let device = makeWASocket.getDevice(m.key.id);
+  let messageTimeStamp = m.messageTimestamp;
   let message = null;
   let lowerMessage = null;
   let outCommandMessage = null;
@@ -129,5 +130,6 @@ module.exports = (m) => {
     isCommand,
     mediaType,
     device,
+    messageTimeStamp,
   };
 };

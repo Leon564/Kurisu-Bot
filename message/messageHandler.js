@@ -19,6 +19,11 @@ module.exports = async (m, conn) => {
       });
       break;
 
+    case "ping":
+      await kurisu.sendMessage(kurisu.from, commands.misc.ping(kurisu), {
+        quoted: m,
+      });
+      break;
     //stickers
     case "sticker":
     case "stiker":
@@ -122,7 +127,7 @@ module.exports = async (m, conn) => {
         }
       );
       break;
-    case "animeid":      
+    case "animeid":
       await kurisu.sendMessage(
         kurisu.from,
         await commands.anime.find.animeById(kurisu),
