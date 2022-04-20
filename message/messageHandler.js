@@ -155,5 +155,17 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+
+    //speech
+    case "speech":
+    case "say":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.misc.speech(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
   }
 };
