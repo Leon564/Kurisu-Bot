@@ -179,5 +179,27 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+    //sfw
+    case "waifu":
+      await kurisu.sendMessage(kurisu.from, await commands.anime.sfw.waifu(), {
+        quoted: m,
+      });
+      break;
+    case "husb":
+      await kurisu.sendMessage(kurisu.from, await commands.anime.sfw.husb(), {
+        quoted: m,
+      });
+      break;
+    //nfsw
+    case "waifuh":
+      await kurisu.sendMessage(kurisu.from, await commands.anime.nfsw.waifu(), {
+        quoted: m,
+      });
+      break;
+    case "husbh":
+      await kurisu.sendMessage(kurisu.from, await commands.anime.nfsw.husb(), {
+        quoted: m,
+      });
+      break;
   }
 };
