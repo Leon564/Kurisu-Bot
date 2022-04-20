@@ -121,7 +121,7 @@ module.exports = async (m, conn) => {
     case "anime":
       await kurisu.sendMessage(
         kurisu.from,
-        await commands.anime.find.animeByName(kurisu),
+        await commands.anime.find.findAnime(kurisu),
         {
           quoted: m,
         }
