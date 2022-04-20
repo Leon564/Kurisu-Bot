@@ -230,5 +230,13 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+
+      //webshots
+    case "webshot":
+      case "ws":
+      await kurisu.sendMessage(kurisu.from, await commands.misc.webshots(kurisu), {
+        quoted: m,
+      });
+      break;
   }
 };
