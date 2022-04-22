@@ -10,6 +10,13 @@ module.exports = async (m, conn) => {
     : kurisu.user.id;
 
   switch (kurisu.command) {
+    // help
+    case "menu":
+    case "help":
+      await kurisu.sendMessage(kurisu.from, commands.help(kurisu), {
+        quoted: m,
+      });
+      break;
     //hola
     case "hola":
     case "hello":
@@ -245,14 +252,22 @@ module.exports = async (m, conn) => {
 
     //movies
     case "movie":
-      await kurisu.sendMessage(kurisu.from, await commands.movie.movieByName(kurisu), {
-        quoted: m,
-      });
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.movie.movieByName(kurisu),
+        {
+          quoted: m,
+        }
+      );
       break;
     case "movieid":
-      await kurisu.sendMessage(kurisu.from, await commands.movie.movieById(kurisu), {
-        quoted: m,
-      });
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.movie.movieById(kurisu),
+        {
+          quoted: m,
+        }
+      );
       break;
   }
 };

@@ -1,0 +1,154 @@
+{
+  "commands": [
+    {
+      "command": "help",
+      "about": "Muestra un menu con los comandos disponibles.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "utils"
+    },
+    {
+      "command": "hola",
+      "about": "Saluda al bot.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "fun"
+    },
+    {
+      "command": "ping",
+      "about": "Muestra el tiempo de respuesta con el servidor.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "utils"
+    },
+    {
+      "command": "sticker",
+      "about": "convierte cualquier imagen/video/gif en sticker.",
+      "usage": "Envialo en un chat donde este el bot, adjuntalo a la imagen que quieras convertir en sticker o responde a un mensaje con el.",
+      "category": "sticker"
+    },
+    {
+      "command": "stickerbg",
+      "about": "Recorta el fondo de cualquier imagen y lo convierte en sticker.",
+      "usage": "Envialo en un chat donde este el bot, adjuntalo a la imagen que quieras convertir en sticker o responde a un mensaje con el.",
+      "category": "sticker"
+    },
+    {
+      "command": "doge",
+      "about": "Obten un sticker del meme *doge* al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "sticker"
+    },
+    {
+      "command": "snime",
+      "about": "Obten un sticker con tematica anime al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "sticker"
+    },
+    {
+      "command": "image",
+      "about": "Convierte cualquier sticker en imagen.",
+      "usage": "Envialo en un chat donde este el bot, responde a cualquier sticker con este comando.\nNota: se obtendra una imagen estatica aunque el sticker sea animado.",
+      "category": "sticker"
+    },
+    {
+      "command": "gif",
+      "about": "Convierte cualquier sticker en gif.",
+      "usage": "Envialo en un chat donde este el bot, responde a cualquier sticker con este comando.",
+      "category": "sticker"
+    },
+    {
+      "command": "meme",
+      "about": "Obten un meme al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "fun"
+    },
+    {
+      "command": "frase",
+      "about": "Obten una frase de algun anime al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "fun"
+    },
+    {
+      "command": "hub",
+      "about": "Crea una imagen personalizada con el estilo del logo de p***hub.",
+      "usage": "Envialo en un chat donde este el bot, agrega $ antes de cada palabra a agregar en la imagen\nEjemplo: hub $kurisu $hub",
+      "category": "fun"
+    },
+    {
+      "command": "8ball",
+      "about": "Obten una respuesta simple al estilo de una bola 8.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "fun"
+    },
+    {
+      "command": "roll",
+      "about": "Lanza los dados y mira que sale.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "fun"
+    },
+    {
+      "command": "music",
+      "about": "Escribe el nombre de la cancion que quieras para que yo la descargue.",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo: music Nyan Cat",
+      "category": "youtube"
+    },
+    {
+      "command": "musicsearch",
+      "about": "Busca una cancion en youtube y te dare los resultados que encuentre para que decidas cual cancion quieres descargar.",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo 1: musicsearch Nyan Cat\nEjemplo 2: ms Nyan Cat",
+      "category": "youtube"
+    },
+    {
+      "command": "anime",
+      "about": "Escribe el nombre del anime que quieras buscar o envia solo el comando para recibir un anime al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "fun"
+    },
+    {
+      "command": "character",
+      "about": "Escribe el nombre del personaje de anime que estes buscando.",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo 1: character Rimuru tempest\nEjemplo 1: musicsearch Nyan Cat\nEjemplo 2: ch Rimuru tempest",
+      "category": "fun"
+    },
+    {
+      "command": "news",
+      "about": "Obten las ultimas noticias del mundo del  anime.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "misc"
+    },
+    {
+      "command": "say",
+      "about": "Te dire lo que quieras en el idioma que quieras.",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo 1: say hola\nEjemplo 2: say $en hola \nEjemplo 3: speech $ja hola\n\nNota: para usar otro idioma junta el simbolo $ antes del idioma que quieras usar, ejemplo: $en hola ==> hola en ingles o $ja para japones.",
+      "category": "misc"
+    },
+    {
+      "command": "lyrics",
+      "about": "Escribe el nombre de la cancion y te respondere con su letra",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo 1: lyrics faded",
+      "category": "misc"
+    },
+    {
+      "command": "waifu",
+      "about": "Obten una imagen de una waifu al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "sfw"
+    },
+    {
+      "command": "husb",
+      "about": "Obten una imagen de un husbando al azar.",
+      "usage": "Envialo en un chat donde este el bot.",
+      "category": "sfw"
+    },
+    {
+      "command": "ws",
+      "about": "Ire a la pagina que me indiques y te traere un screenshot de la pagina.",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo: ws https://www.google.com",
+      "category": "misc"
+    },
+    {
+      "command": "movie",
+      "about": "Escribe el nombre de la pelicula que quieras buscar y te respondere con sus datos.",
+      "usage": "Envialo en un chat donde este el bot.\nEjemplo 1: movie toy story",
+      "category": "fun"
+    }
+  ]
+}
