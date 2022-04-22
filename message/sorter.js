@@ -40,6 +40,9 @@ module.exports = (m) => {
     if (m.message.listResponseMessage) {
       message = m.message.listResponseMessage.singleSelectReply.selectedRowId;
     }
+    if(m.message.buttonsResponseMessage){
+      message = m.message.buttonsResponseMessage.selectedButtonId;
+    }
   } else if (messageType == "buttonsResponseMessage") {
     message = m.message.buttonsResponseMessage.selectedButtonId;
   } else if (messageType == "messageContextInfo") {
