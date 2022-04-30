@@ -269,5 +269,12 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+
+      //Groups
+    case "tagall":
+      await kurisu.sendMessage(kurisu.from, await commands.groups.tagAll(kurisu), {
+        quoted: m,
+      });
+      break;
   }
 };

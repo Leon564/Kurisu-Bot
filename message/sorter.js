@@ -18,6 +18,7 @@ module.exports = (m) => {
   let outCommandMessageLower = null;
   let isCommand = null;
   let from = m.key.remoteJid;
+  let participant = m.key?.participant;
   const isGroup = from.includes("g.us");
 
   if (messageType == "conversation") {
@@ -40,7 +41,7 @@ module.exports = (m) => {
     if (m.message.listResponseMessage) {
       message = m.message.listResponseMessage.singleSelectReply.selectedRowId;
     }
-    if(m.message.buttonsResponseMessage){
+    if (m.message.buttonsResponseMessage) {
       message = m.message.buttonsResponseMessage.selectedButtonId;
     }
   } else if (messageType == "buttonsResponseMessage") {
@@ -115,6 +116,11 @@ module.exports = (m) => {
   args = args ? args.filter((arg) => arg !== "") : [];
   isCommand = lowerMessage ? lowerMessage.startsWith(prefix) : null;
 
+  participant =
+    participant && m.key.participant.includes(":")
+      ? `${m.key.participant.split(":")[0]}@s.whatsapp.net`
+      : m.key.participant;
+
   return {
     messageType,
     message,
@@ -134,5 +140,6 @@ module.exports = (m) => {
     mediaType,
     device,
     messageTimeStamp,
+    participant,
   };
 };
