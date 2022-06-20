@@ -1,5 +1,6 @@
 const sorter = require("./sorter");
 const { commands } = require("../lib");
+const makeWASocket = require("@adiwajshing/baileys");
 
 module.exports = async (m, conn) => {
   let kurisu = { ...conn, ...sorter(m) };
@@ -8,6 +9,8 @@ module.exports = async (m, conn) => {
   kurisu.botId = kurisu.user.id.includes(":")
     ? kurisu.user.id.split(":")[0] + "@s.whatsapp.net"
     : kurisu.user.id;
+
+  await kurisu.sendPresenceUpdate("composing", kurisu.from);
 
   switch (kurisu.command) {
     // help
@@ -121,6 +124,7 @@ module.exports = async (m, conn) => {
     //youtube
     case "music":
       const result = await commands.youtube.youtubeToMp3(kurisu);
+      await kurisu.sendPresenceUpdate("recording", kurisu.from);
       await kurisu.sendMessage(kurisu.from, result[0], result[1]);
       break;
 
@@ -270,11 +274,19 @@ module.exports = async (m, conn) => {
       );
       break;
 
-      //Groups
+    //Groups
     case "tagall":
-      await kurisu.sendMessage(kurisu.from, await commands.groups.tagAll(kurisu), {
-        quoted: m,
-      });
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.groups.tagAll(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+
+    default:
+      await kurisu.sendPresenceUpdate("paused", kurisu.from);
       break;
   }
 };

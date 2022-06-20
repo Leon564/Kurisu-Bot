@@ -1,145 +1,140 @@
 const { prefix } = require("../config");
 const makeWASocket = require("@adiwajshing/baileys");
-module.exports = (m) => {
-  let messageType = Object.keys(m.message)[0];
-  let device = makeWASocket.getDevice(m.key.id);
-  let messageTimeStamp = m.messageTimestamp;
-  let message = null;
-  let lowerMessage = null;
-  let outCommandMessage = null;
-  let outPrefixMessage = null;
-  let outPrefixMessageLower = null;
-  let args = null;
-  let media = null;
-  let mediaType = null;
-  let canonicalUrl = null;
-  let mentions = null;
-  let command = null;
-  let outCommandMessageLower = null;
-  let isCommand = null;
-  let from = m.key.remoteJid;
-  let participant = m.key?.participant;
-  const isGroup = from.includes("g.us");
 
-  if (messageType == "conversation") {
-    message = m.message.conversation;
-  } else if (messageType == "imageMessage") {
-    message = m.message.imageMessage.caption;
-    media = m.message.imageMessage;
-    mediaType = "image";
-  } else if (messageType == "videoMessage") {
-    message = m.message.videoMessage.caption;
-    media = m.message.videoMessage;
-    mediaType = "video";
-  } else if (messageType == "stickerMessage") {
-    media = m.message.stickerMessage;
-    mediaType = "sticker";
-  } else if (
-    messageType == "listResponseMessage" ||
-    messageType == "messageContextInfo"
-  ) {
-    if (m.message.listResponseMessage) {
-      message = m.message.listResponseMessage.singleSelectReply.selectedRowId;
-    }
-    if (m.message.buttonsResponseMessage) {
-      message = m.message.buttonsResponseMessage.selectedButtonId;
-    }
-  } else if (messageType == "buttonsResponseMessage") {
-    message = m.message.buttonsResponseMessage.selectedButtonId;
-  } else if (messageType == "messageContextInfo") {
-    message = m.message.buttonsResponseMessage
-      ? m.message.buttonsResponseMessage.selectedButtonId
-      : "";
-  } else if (messageType == "extendedTextMessage") {
-    message = m.message.extendedTextMessage.text;
+const sorter = (m) => {
+  const content = {
+    message: null,
+    messageContent: null,
+    canonicalUrl: null,
+    mentions: null,
+    command: null,
+    outCommandMessage: null,
+    outCommandMessageLower: null,
+    isCommand: null,
+    from: null,
+    participant: null,
+    isGroup: null,
+    messageTimeStamp: null,
+    messageType: null,
+    mediaType: null,
+    device: null,
+    lowerMessage: null,
+    outPrefixMessage: null,
+    outPrefixMessageLower: null,
+    args: null,
+  };
 
-    canonicalUrl = m.message.extendedTextMessage.canonicalUrl
-      ? m.message.extendedTextMessage.canonicalUrl
-      : false;
+  content.messageTimeStamp = m.messageTimestamp;
+  content.messageType = Object.keys(m.message)[0];
+  content.device = makeWASocket.getDevice(m.key.id);
+  content.from = m.key.remoteJid;
+  content.participant = m.key?.participant?.includes(":")
+    ? `${m.key.participant.split(":")[0]}@s.whatsapp.net`
+    : m.key?.participant;
+  content.isGroup = m.key.remoteJid.includes("g.us");
 
-    if (m.message.extendedTextMessage.contextInfo) {
-      if (
-        m.message.extendedTextMessage.contextInfo &&
-        m.message.extendedTextMessage.contextInfo.mentionedJid
-      ) {
-        mentions = m.message.extendedTextMessage.contextInfo.mentionedJid;
+  switch (content.messageType) {
+    case "conversation":
+      content.message = m.message.conversation;
+      break;
+    case "imageMessage":
+      content.message = m.message.imageMessage.caption;
+      content.messageContent = m;
+      content.mediaType = "image";
+      break;
+    case "videoMessage":
+      content.message = m.message.videoMessage.caption;
+      content.messageContent = m;
+      content.mediaType = "video";
+      break;
+    case "stickerMessage":
+      content.messageContent = m;
+      content.mediaType = "sticker";
+      break;
+    case "listResponseMessage":
+    case "messageContextInfo":
+      content.message = m.message.buttonsResponseMessage;
+      if (m.message.listResponseMessage) {
+        content.message =
+          m.message?.listResponseMessage?.singleSelectReply?.selectedRowId;
       }
-      if (m.message.extendedTextMessage.contextInfo.quotedMessage) {
-        messageType = Object.keys(
+      if (m.message.buttonsResponseMessage) {
+        content.message = m.message?.buttonsResponseMessage?.selectedButtonId;
+      }
+      break;
+    case "buttonsResponseMessage":
+      content.message = m.message.buttonsResponseMessage.selectedButtonId;
+      break;
+    case "extendedTextMessage":
+      content.message = m.message.extendedTextMessage?.text;
+      content.canonicalUrl = m.message.extendedTextMessage?.canonicalUrl;
+      content.mentions =
+        m.message.extendedTextMessage?.contextInfo?.mentionedJid;
+
+      if (m.message.extendedTextMessage?.contextInfo?.quotedMessage) {
+        content.messageType = Object.keys(
           m.message.extendedTextMessage.contextInfo.quotedMessage
         )[0];
+        switch (content.messageType) {        
+          case "imageMessage":
+            content.messageContent = {
+              message: {
+                ...m.message.extendedTextMessage?.contextInfo?.quotedMessage,
+              },
+            };
+            content.messageType = "imageMessage";
+            content.mediaType = "image";
+            break;
+          case "videoMessage":
+            content.messageContent = {
+              message: {
+                ...m.message.extendedTextMessage?.contextInfo?.quotedMessage,
+              },
+            };
+            content.messageType = "videoMessage";
+            content.mediaType = "video";
+            break;
+          case "stickerMessage":
+            content.messageContent = {
+              message: {
+                ...m.message.extendedTextMessage?.contextInfo?.quotedMessage,
+              },
+            };
+            content.messageType = "stickerMessage";
+            content.mediaType = "sticker";
+            break;
+          case "documentMessage":
+            content.mediaType =
+              m.message.extendedTextMessage.contextInfo.quotedMessage?.documentMessage?.mimetype?.split(
+                "/"
+              )[0];
+            content.messageType = "documentMessage";
+            content.messageContent = {
+              message: {
+                ...m.message.extendedTextMessage.contextInfo.quotedMessage,
+              },
+            };
 
-        if (
-          m.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage
-        ) {
-          media =
-            m.message.extendedTextMessage.contextInfo.quotedMessage
-              .stickerMessage;
-          messageType = "stickerMessage";
-          mediaType = "sticker";
-        }
-        if (
-          m.message.extendedTextMessage.contextInfo.quotedMessage.imageMessage
-        ) {
-          media =
-            m.message.extendedTextMessage.contextInfo.quotedMessage
-              .imageMessage;
-          messageType = "imageMessage";
-          mediaType = "image";
-        }
-        if (
-          m.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage
-        ) {
-          media =
-            m.message.extendedTextMessage.contextInfo.quotedMessage
-              .videoMessage;
-          messageType = "videoMessage";
-          mediaType = "video";
+            break;
         }
       }
-    }
+      break;
   }
 
-  lowerMessage = message ? message.toLocaleLowerCase() : null;
-  outPrefixMessage = message ? message.replace(prefix, "") : null;
-  outPrefixMessageLower = outPrefixMessage
-    ? outPrefixMessage.toLocaleLowerCase()
-    : null;
-  command = lowerMessage ? lowerMessage.split(" ")[0].slice(1) : null;
-  outCommandMessageLower = lowerMessage
-    ? lowerMessage.substring(command.length + 2)
-    : null;
-  outCommandMessage = message
-    ? message.slice(message.split(" ")[0].length + 1)
-    : null;
-  args = outCommandMessage ? outCommandMessage.split(" ") : null;
-  args = args ? args.filter((arg) => arg !== "") : [];
-  isCommand = lowerMessage ? lowerMessage.startsWith(prefix) : null;
+  content.lowerMessage = content.message?.toLowerCase();
+  content.outPrefixMessage = content.message?.replace(prefix, "");
+  content.outPrefixMessageLower = content.lowerMessage?.replace(prefix, "");
+  content.isCommand = content.message?.startsWith(prefix);
+  content.command = content.isCommand
+    ? content.outPrefixMessageLower.split(' ')[0]
+    : null;  
+  content.outCommandMessage = content.message?.slice(
+    content.message.split(" ")[0].length + 1
+  );
+  content.args = content.outCommandMessage?.split(" ");
+  content.outCommandMessageLower = content.outCommandMessage?.toLowerCase();
 
-  participant =
-    participant && m.key.participant.includes(":")
-      ? `${m.key.participant.split(":")[0]}@s.whatsapp.net`
-      : m.key.participant;
-
-  return {
-    messageType,
-    message,
-    media,
-    mentions,
-    outPrefixMessage,
-    outPrefixMessageLower,
-    outCommandMessage,
-    outCommandMessageLower,
-    lowerMessage,
-    command,
-    args,
-    canonicalUrl,
-    from,
-    isGroup,
-    isCommand,
-    mediaType,
-    device,
-    messageTimeStamp,
-    participant,
-  };
+  return content;
 };
+
+module.exports = sorter;
