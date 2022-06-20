@@ -1,5 +1,6 @@
 const makeWASocket = require("@adiwajshing/baileys");
 const messageHandler = require("./message");
+
 const { state, saveState } = makeWASocket.useSingleFileAuthState(
   "./config/auth_info_multi.json"
 );
@@ -7,7 +8,7 @@ const { state, saveState } = makeWASocket.useSingleFileAuthState(
 async function connectToWhatsApp() {
   const sock = makeWASocket.default({
     printQRInTerminal: true,
-    auth: state,
+    auth: state,    
   });
 
   sock.ev.on("creds.update", saveState);
@@ -38,6 +39,8 @@ async function connectToWhatsApp() {
     if (!m.message) return;
     messageHandler(m, sock);
   });
+  
+
 }
 // run in main file
 connectToWhatsApp();
