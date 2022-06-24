@@ -130,8 +130,8 @@ module.exports = async (m, conn) => {
 
     //youtube
     case "music":
-      const result = await commands.youtube.youtubeToMp3(kurisu);
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
+      const result = await commands.youtube.youtubeToMp3(kurisu);      
       await kurisu.sendMessage(kurisu.from, result[0], result[1]);
       break;
 
@@ -291,7 +291,8 @@ module.exports = async (m, conn) => {
         }
       );
       break;
-
+      
+    //default return to default state      
     default:
       await kurisu.sendPresenceUpdate("paused", kurisu.from);
       break;
