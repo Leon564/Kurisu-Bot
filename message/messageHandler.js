@@ -114,6 +114,13 @@ module.exports = async (m, conn) => {
       });
       break;
 
+    //simi
+    case "simi":
+      await kurisu.sendMessage(kurisu.from, await commands.fun.simi(kurisu), {
+        quoted: m,
+      });
+      break;
+
     //roll
     case "roll":
       await kurisu.sendMessage(kurisu.from, await commands.fun.rollDice(), {
