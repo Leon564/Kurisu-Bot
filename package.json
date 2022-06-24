@@ -1,6 +1,6 @@
 {
   "name": "kurisu-bot",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "WhatsApp Bot",
   "main": "index.js",
   "scripts": {
@@ -19,10 +19,10 @@
   },
   "homepage": "https://github.com/Leon564/Kurisu-Bot#readme",
   "dependencies": {
-    "@adiwajshing/baileys": "^4.1.0",
+    "@adiwajshing/baileys": "4.1.0",
     "axios": "^0.26.1",
     "dotenv": "^16.0.0",
-    "ezgif": "github:Leon564/ezgif-converter",
+    "ezgif-converter": "github:Leon564/ezgif-converter",
     "fetch-json": "^2.6.4",
     "fs-extra": "^10.1.0",
     "gtts": "^0.2.1",
