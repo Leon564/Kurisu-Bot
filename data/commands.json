@@ -7,6 +7,12 @@
       "category": "utils"
     },
     {
+      "command": "tagall",
+      "about": "Envia un mensaje etiquetando a todos los miembros del grupo",
+      "usage": "Envialo en un chat grupal donde este el bot.",
+      "category": "utils"
+    },
+    {
       "command": "hola",
       "about": "Saluda al bot.",
       "usage": "Envialo en un chat donde este el bot.",
