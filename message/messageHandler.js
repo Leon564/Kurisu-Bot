@@ -10,7 +10,12 @@ module.exports = async (m, conn) => {
     ? kurisu.user.id.split(":")[0] + "@s.whatsapp.net"
     : kurisu.user.id;
 
-  await kurisu.sendPresenceUpdate("composing", kurisu.from);
+  if (!m.key?.fromMe) {
+    await kurisu.sendPresenceUpdate("composing", kurisu.from);
+    await sock.sendReadReceipt(msg.key.remoteJid, msg.key.participant, [
+      msg.key.id,
+    ]);
+  }
 
   switch (kurisu.command) {
     // help
@@ -131,7 +136,7 @@ module.exports = async (m, conn) => {
     //youtube
     case "music":
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
-      const result = await commands.youtube.youtubeToMp3(kurisu);      
+      const result = await commands.youtube.youtubeToMp3(kurisu);
       await kurisu.sendMessage(kurisu.from, result[0], result[1]);
       break;
 
@@ -291,8 +296,8 @@ module.exports = async (m, conn) => {
         }
       );
       break;
-      
-    //default return to default state      
+
+    //default return to default state
     default:
       await kurisu.sendPresenceUpdate("paused", kurisu.from);
       break;

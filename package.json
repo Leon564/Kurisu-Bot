@@ -1,6 +1,6 @@
 {
   "name": "kurisu-bot",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "WhatsApp Bot",
   "main": "index.js",
   "scripts": {
@@ -19,11 +19,12 @@
   },
   "homepage": "https://github.com/Leon564/Kurisu-Bot#readme",
   "dependencies": {
-    "@adiwajshing/baileys": "4.1.0",
-    "axios": "^0.26.1",
-    "dotenv": "^16.0.0",
+    "@adiwajshing/baileys": "4.2.0",
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
     "ezgif-converter": "github:Leon564/ezgif-converter",
-    "fetch-json": "^2.6.4",
+    "fetch-json": "^2.6.5",
     "fs-extra": "^10.1.0",
     "gtts": "^0.2.1",
     "lyrics": "github:Leon564/Lyrics",
@@ -32,7 +33,7 @@
     "path": "^0.12.7",
     "qrcode-terminal": "^0.12.0",
     "scrape-yt": "^1.4.8",
-    "sharp": "^0.30.4",
+    "sharp": "^0.30.7",
     "translatte": "^3.0.1",
     "ws-sticker-maker": "github:Leon564/ws-sticker-maker",
     "youtube-mp3-downloader": "^0.7.10"
