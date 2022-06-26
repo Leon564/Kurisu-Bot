@@ -21,7 +21,7 @@
     {
       "command": "sticker",
       "about": "convierte cualquier imagen/video/gif en sticker.",
-      "usage": "Envialo en un chat donde este el bot, adjuntalo a la imagen que quieras convertir en sticker o responde a un mensaje con el. \n\n-Puedes agregar $pack $tu nombre para que el sticker tenga un pack y autor personalizado.\n\n-Usa $full para que la imagen a procesar no sea deformada ni recortada.\n\n-Usa $crop para que la imagen a procesar sea recortada del tamaño apropiado.\n\n -Usa $circle para que le sticker tenga forma circular (solo funciona con imagenes).\n\nEjemplo: sticker $Pack01 $Kurisu $full",
+      "usage": "Envialo en un chat donde este el bot, adjuntalo a la imagen que quieras convertir en sticker o responde a un mensaje con el. \n\n-Puedes agregar $pack $tu nombre para que el sticker tenga un pack y autor personalizado.\n\n-Usa $full para que la imagen a procesar no sea deformada ni recortada.\n\n-Usa $crop para que la imagen a procesar sea recortada del tamaño apropiado.\n\n -Usa $circle para que el sticker tenga forma circular (solo funciona con imagenes).\n\nEjemplo: sticker $Pack01 $Kurisu $full",
       "category": "sticker"
     },
     {
