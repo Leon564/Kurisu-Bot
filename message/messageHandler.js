@@ -12,8 +12,8 @@ module.exports = async (m, conn) => {
 
   if (!m.key?.fromMe) {
     await kurisu.sendPresenceUpdate("composing", kurisu.from);
-    await sock.sendReadReceipt(msg.key.remoteJid, msg.key.participant, [
-      msg.key.id,
+    await kurisu.sendReadReceipt(kurisu.from, m.key.participant, [
+      m.key.id,
     ]);
   }
 
