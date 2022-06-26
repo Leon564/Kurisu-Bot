@@ -1,3 +1,4 @@
 node_modules/
 .env
-config/auth_info_multi.json
+config/baileys_store_multi.json
+config/auth_info_baileys/
