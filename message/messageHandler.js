@@ -12,9 +12,7 @@ module.exports = async (m, conn) => {
 
   if (!m.key?.fromMe) {
     await kurisu.sendPresenceUpdate("composing", kurisu.from);
-    await kurisu.sendReadReceipt(kurisu.from, m.key.participant, [
-      m.key.id,
-    ]);
+    await kurisu.sendReadReceipt(kurisu.from, m.key.participant, [m.key.id]);
   }
 
   switch (kurisu.command) {
@@ -138,6 +136,9 @@ module.exports = async (m, conn) => {
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
       const result = await commands.youtube.youtubeToMp3(kurisu);
       await kurisu.sendMessage(kurisu.from, result[0], result[1]);
+      await kurisu.sendMessage(kurisu.from, {
+        react: { text: "🎶", key: m.key },
+      });
       break;
 
     case "ms":
