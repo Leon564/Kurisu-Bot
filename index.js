@@ -47,11 +47,13 @@ const startSock = async () => {
     auth: state,
     msgRetryCounterMap,
     // implement to handle retries
+    /*
     getMessage: async (key) => {
       return {
         conversation: "hello",
       };
     },
+    */
   });
 
   store?.bind(sock.ev);
