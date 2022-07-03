@@ -49,6 +49,9 @@ const startSock = async () => {
     // implement to handle retries
     getMessage: async (key) => {
       console.log(`getMessage: ${key}`);
+      return {
+        conversation: "hello",
+      };
     },
   });
 
