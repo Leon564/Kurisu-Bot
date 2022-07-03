@@ -26,6 +26,8 @@ const sorter = (m) => {
 
   content.messageTimeStamp = m.messageTimestamp;
   content.messageType = Object.keys(m.message)[0];
+  if (content.messageType === "senderKeyDistributionMessage")
+    content.messageType = Object.keys(m.message)[2];
   content.device = makeWASocket.getDevice(m.key.id);
   content.from = m.key.remoteJid;
   content.participant = m.key?.participant?.includes(":")
@@ -75,7 +77,7 @@ const sorter = (m) => {
         content.messageType = Object.keys(
           m.message.extendedTextMessage.contextInfo.quotedMessage
         )[0];
-        switch (content.messageType) {        
+        switch (content.messageType) {
           case "imageMessage":
             content.messageContent = {
               message: {
@@ -126,8 +128,8 @@ const sorter = (m) => {
   content.outPrefixMessageLower = content.lowerMessage?.replace(prefix, "");
   content.isCommand = content.message?.startsWith(prefix);
   content.command = content.isCommand
-    ? content.outPrefixMessageLower.split(' ')[0]
-    : null;  
+    ? content.outPrefixMessageLower.split(" ")[0]
+    : null;
   content.outCommandMessage = content.message?.slice(
     content.message.split(" ")[0].length + 1
   );
