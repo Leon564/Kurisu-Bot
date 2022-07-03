@@ -26,6 +26,7 @@
     "ezgif-converter": "github:Leon564/ezgif-converter",
     "fetch-json": "^2.6.5",
     "fs-extra": "^10.1.0",
+    "got": "^11.8.5",
     "gtts": "^0.2.1",
     "lyrics": "github:Leon564/Lyrics",
     "moment-timezone": "^0.5.34",
