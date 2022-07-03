@@ -47,13 +47,9 @@ const startSock = async () => {
     auth: state,
     msgRetryCounterMap,
     // implement to handle retries
-    /*
     getMessage: async (key) => {
-      return {
-        conversation: "hello",
-      };
+      console.log(`getMessage: ${key}`);
     },
-    */
   });
 
   store?.bind(sock.ev);
@@ -73,9 +69,13 @@ const startSock = async () => {
 
   sock.ev.on("messages.upsert", async (m) => {
     console.log(JSON.stringify(m, undefined, 2));
-  
+
     const msg = m.messages[0];
-    if (m.type === "notify" && doReplies && msg.message) {
+    if (
+      (m.type === "notify" || m.type === "append") &&
+      doReplies &&
+      msg.message
+    ) {
       //MessageHandler here
       messageHandler(msg, sock);
     }

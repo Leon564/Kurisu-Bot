@@ -151,6 +151,14 @@ module.exports = async (m, conn) => {
         }
       );
       break;
+    //youtube video downloader
+    case "yt":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.youtube.youtubeToMp4(kurisu),
+        { quoted: m }
+      );
+      break;
 
     //anime
     case "anime":
