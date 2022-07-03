@@ -101,6 +101,11 @@
       "about": "Busca una cancion en youtube y te dare los resultados que encuentre para que decidas cual cancion quieres descargar.",
       "usage": "Envialo en un chat donde este el bot.\nEjemplo 1: musicsearch Nyan Cat\nEjemplo 2: ms Nyan Cat",
       "category": "youtube"
+    },{
+      "command":"yt",
+      "about":"Busca y descarga videos de youtube.",
+      "usage":"Envialo en un chat donde este el bot.\nEjemplo: yt Nyan Cat",
+      "category":"youtube"
     },
     {
       "command": "anime",
