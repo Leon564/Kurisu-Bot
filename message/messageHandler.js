@@ -145,7 +145,7 @@ module.exports = async (m, conn) => {
     case "musicsearch":
       await kurisu.sendMessage(
         kurisu.from,
-        await commands.youtube.musicSearch(kurisu),
+        await commands.youtube.youtubeSearch.musicSearch(kurisu),
         {
           quoted: m,
         }
