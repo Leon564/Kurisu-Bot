@@ -135,10 +135,14 @@ module.exports = async (m, conn) => {
     case "music":
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
       const result = await commands.youtube.youtubeToMp3(kurisu);
-      await kurisu.sendMessage(kurisu.from, result[0], result[1]);
-      await kurisu.sendMessage(kurisu.from, {
-        react: { text: "🎶", key: m.key },
-      });
+      if (result[0]) {
+        await kurisu.sendMessage(kurisu.from, result[0], result[1]);
+        await kurisu.sendMessage(kurisu.from, {
+          react: { text: "🎶", key: m.key },
+        });
+        break;
+      }
+      await kurisu.sendMessage(kurisu.from, result, { quoted: m });
       break;
 
     case "ms":
