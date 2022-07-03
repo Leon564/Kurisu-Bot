@@ -1,6 +1,6 @@
 {
   "name": "kurisu-bot",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "WhatsApp Bot",
   "main": "index.js",
   "scripts": {
