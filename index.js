@@ -47,12 +47,18 @@ const startSock = async () => {
     auth: state,
     msgRetryCounterMap,
     // implement to handle retries
-    getMessage: async (key) => {
-      console.log(`getMessage: ${key}`);
-      return {
-        conversation: "hello",
-      };
-    },
+    getMessage: async key => {
+      console.log("getting message from store");
+			if(store) {
+				const msg = await store.loadMessage(key?.remoteJid, key?.id, undefined)
+				return msg?.message || undefined
+			}
+
+			// only if store is present
+			return {
+				conversation: 'hello'
+			}
+		}
   });
 
   store?.bind(sock.ev);
