@@ -103,6 +103,25 @@ module.exports = async (m, conn) => {
         quoted: m,
       });
       break;
+    //search
+    case "search":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.misc.findImage.searchImage(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+      case "imagelink":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.misc.findImage.replyImagebyLink(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
     //hub
     case "hub":
       await kurisu.sendMessage(kurisu.from, await commands.fun.hub(kurisu), {

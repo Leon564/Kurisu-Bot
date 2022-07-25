@@ -1,6 +1,6 @@
 {
   "name": "kurisu-bot",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "WhatsApp Bot",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Leon564/Kurisu-Bot#readme",
   "dependencies": {
-    "@adiwajshing/baileys": "4.2.0",
+    "@adiwajshing/baileys": "^4.2.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
@@ -28,6 +28,7 @@
     "fs-extra": "^10.1.0",
     "got": "^11.8.5",
     "gtts": "^0.2.1",
+    "imgbb": "github:Leon564/imgbb",
     "lyrics": "github:Leon564/Lyrics",
     "moment-timezone": "^0.5.34",
     "node-fetch": "2.6",
