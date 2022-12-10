@@ -153,6 +153,14 @@ module.exports = async (m, conn) => {
     //youtube
     case "music":
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.youtube.youtubeToMp3(kurisu),
+        { quoted: m }
+      );
+      break;
+    /*case "music":
+      await kurisu.sendPresenceUpdate("recording", kurisu.from);
       commands.youtube.youtubeToMp3(kurisu).then(async (result) => {
         if (result[0]) {
           await kurisu.sendMessage(kurisu.from, result[0], result[1]);
@@ -165,6 +173,7 @@ module.exports = async (m, conn) => {
       });
 
       break;
+    */
     
     case "ms":
     case "musicsearch":
