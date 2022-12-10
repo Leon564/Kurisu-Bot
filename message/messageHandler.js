@@ -113,7 +113,7 @@ module.exports = async (m, conn) => {
         }
       );
       break;
-      case "imagelink":
+    case "imagelink":
       await kurisu.sendMessage(
         kurisu.from,
         await commands.misc.findImage.replyImagebyLink(kurisu),
@@ -153,17 +153,19 @@ module.exports = async (m, conn) => {
     //youtube
     case "music":
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
-      const result = await commands.youtube.youtubeToMp3(kurisu);
-      if (result[0]) {
-        await kurisu.sendMessage(kurisu.from, result[0], result[1]);
-        await kurisu.sendMessage(kurisu.from, {
-          react: { text: "🎶", key: m.key },
-        });
-        break;
-      }
-      await kurisu.sendMessage(kurisu.from, result, { quoted: m });
-      break;
+      commands.youtube.youtubeToMp3(kurisu).then(async (result) => {
+        if (result[0]) {
+          await kurisu.sendMessage(kurisu.from, result[0], result[1]);
+          await kurisu.sendMessage(kurisu.from, {
+            react: { text: "🎶", key: m.key },
+          });
+          return;
+        }
+        await kurisu.sendMessage(kurisu.from, result, { quoted: m });
+      });
 
+      break;
+    
     case "ms":
     case "musicsearch":
       await kurisu.sendMessage(
