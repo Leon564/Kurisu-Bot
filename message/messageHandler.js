@@ -151,7 +151,7 @@ module.exports = async (m, conn) => {
       break;
 
     //youtube
-    case "music":
+    /*case "music":
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
       await kurisu.sendMessage(
         kurisu.from,
@@ -159,21 +159,13 @@ module.exports = async (m, conn) => {
         { quoted: m }
       );
       break;
-    /*case "music":
+    */
+    case "music":
       await kurisu.sendPresenceUpdate("recording", kurisu.from);
-      commands.youtube.youtubeToMp3(kurisu).then(async (result) => {
-        if (result[0]) {
-          await kurisu.sendMessage(kurisu.from, result[0], result[1]);
-          await kurisu.sendMessage(kurisu.from, {
-            react: { text: "🎶", key: m.key },
-          });
-          return;
-        }
-        await kurisu.sendMessage(kurisu.from, result, { quoted: m });
-      });
+      await commands.youtube.youtubeToMp3Old(kurisu, m);
 
       break;
-    */
+    
     
     case "ms":
     case "musicsearch":
