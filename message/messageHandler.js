@@ -243,6 +243,19 @@ module.exports = async (m, conn) => {
       );
       break;
 
+      //translate
+
+    case "translate":
+    case "tr":
+      await kurisu.sendMessage(
+        kurisu.from,
+        await commands.misc.translate(kurisu),
+        {
+          quoted: m,
+        }
+      );
+      break;
+
     //speech
     case "speech":
     case "say":
