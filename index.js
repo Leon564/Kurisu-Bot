@@ -12,7 +12,7 @@ const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger").default;
 const messageHandler = require("./message");
 
 const logger = MAIN_LOGGER.child({});
-logger.level = "trace";
+logger.level = "silent";
 
 const useStore = !process.argv.includes("--no-store");
 const doReplies = !process.argv.includes("--no-reply");
@@ -77,7 +77,7 @@ const startSock = async () => {
   );
 
   sock.ev.on("messages.upsert", async (m) => {
-    console.log(JSON.stringify(m, undefined, 2));
+    //console.log(JSON.stringify(m, undefined, 2));
 
     const msg = m.messages[0];
     if (
@@ -90,12 +90,12 @@ const startSock = async () => {
     }
   });
 
-  sock.ev.on("messages.update", (m) => console.log(m));
-  sock.ev.on("message-receipt.update", (m) => console.log(m));
-  sock.ev.on("presence.update", (m) => console.log(m));
-  sock.ev.on("chats.update", (m) => console.log(m));
-  sock.ev.on("chats.delete", (m) => console.log(m));
-  sock.ev.on("contacts.upsert", (m) => console.log(m));
+  // sock.ev.on("messages.update", (m) => console.log(m));
+  // sock.ev.on("message-receipt.update", (m) => console.log(m));
+  // sock.ev.on("presence.update", (m) => console.log(m));
+  // sock.ev.on("chats.update", (m) => console.log(m));
+  // sock.ev.on("chats.delete", (m) => console.log(m));
+  // sock.ev.on("contacts.upsert", (m) => console.log(m));
 
   sock.ev.on("connection.update", (update) => {
     const { connection, lastDisconnect } = update;
