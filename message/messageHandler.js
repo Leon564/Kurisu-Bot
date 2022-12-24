@@ -246,6 +246,7 @@ module.exports = async (m, conn) => {
       //translate
 
     case "translate":
+    case "traslate":
     case "tr":
       await kurisu.sendMessage(
         kurisu.from,
