@@ -78,6 +78,12 @@ const sorter = (m) => {
           m.message.extendedTextMessage.contextInfo.quotedMessage
         )[0];
         switch (content.messageType) {
+          case "conversation":
+            content.messageContent = {
+              message: {
+                ...m.message.extendedTextMessage?.contextInfo?.quotedMessage,
+              },
+            };
           case "imageMessage":
             content.messageContent = {
               message: {
