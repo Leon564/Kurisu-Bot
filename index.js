@@ -49,16 +49,38 @@ const startSock = async () => {
     // implement to handle retries
     getMessage: async key => {
       console.log("getting message from store");
-			if(store) {
-				const msg = await store.loadMessage(key?.remoteJid, key?.id, undefined)
-				return msg?.message || undefined
-			}
+      if (store) {
+        const msg = await store.loadMessage(key?.remoteJid, key?.id, undefined)
+        return msg?.message || undefined
+      }
 
-			// only if store is present
-			return {
-				conversation: 'hello'
-			}
-		}
+      // only if store is present
+      return {
+        conversation: 'hello'
+      }
+    },
+    //fix templateMessage
+    patchMessageBeforeSending: (message) => {
+      const requiresPatch = !!(
+        message.buttonsMessage ||
+        // || message.templateMessage
+        message.listMessage
+      );
+      if (requiresPatch) {
+        message = {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: {
+                deviceListMetadataVersion: 2,
+                deviceListMetadata: {},
+              },
+              ...message,
+            },
+          },
+        };
+      }
+      return message;
+    }
   });
 
   store?.bind(sock.ev);
