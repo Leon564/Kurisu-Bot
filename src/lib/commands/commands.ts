@@ -1,5 +1,5 @@
 import greet from '../useCases/greetings.useCase'
-import dice from '../useCases/dice'
+import dice from '../useCases/dice.useCase'
 import music from '../useCases/music.useCase'
 
 export class commands {
@@ -7,7 +7,7 @@ export class commands {
   constructor (private data: any) {
     this.comandos = {
       greet,
-      dice,
+      roll: dice,
       hola: greet,
       music: music
     }
@@ -17,7 +17,7 @@ export class commands {
     return new commands(data).getCommand()
   }
 
-  async getCommand  () {
+  async getCommand () {
     const command = this.data.message.command
     if (this.comandos[command]) {
       const response = await this.comandos[command](this.data.message)
