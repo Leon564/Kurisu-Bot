@@ -45,34 +45,23 @@ class commandHandler {
     if (data.media && Buffer.isBuffer(data.media)) {
       media = data.media
     }
-
+    let messageContent: any = {}
     switch (data.type) {
       case 'text':
-        await this.socket.sendMessage(
-          userId,
-          { text: data.text! },
-          { ...quoted }
-        )
+        messageContent = { text: data.text }
         break
       case 'image':
-        await this.socket.sendMessage(
-          userId,
-          { image: media, caption: data.text },
-          {
-            ...quoted
-          }
-        )
-        break
+      case 'video':
       case 'audio':
-        await this.socket.sendMessage(
-          userId,
-          { audio: media, caption: data.text },
-          {
-            ...quoted
-          }
-        )
+      case 'sticker':
+        messageContent = { [data.type]: media, caption: data.text }
         break
+
+      default:
+        return
     }
+
+    await this.socket.sendMessage(userId, messageContent, { ...quoted })
 
     if (data.reacttion)
       await this.socket.sendMessage(userId, {
