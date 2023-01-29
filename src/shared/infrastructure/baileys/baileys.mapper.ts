@@ -53,7 +53,7 @@ class Message implements MessageBody {
     this.text = this.getText(data.message)
     if (config.prefix && this.text?.startsWith(config.prefix)) {
       this.isCommand = true
-      this.command = this.text?.split(' ')[0].replace(config.prefix, '')
+      this.command = this.text?.split(' ')[0].replace(config.prefix, '').toLocaleLowerCase()
       this.outCommandMessage = this.text?.split(' ').slice(1).join(' ')
     }
 

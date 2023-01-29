@@ -13,7 +13,8 @@
     "@adiwajshing/keyed-db": "^0.2.4",
     "@hapi/boom": "^10.0.0",
     "fs": "^0.0.1-security",
-    "qrcode-terminal": "^0.12.0"
+    "qrcode-terminal": "^0.12.0",
+    "ytd": "github:Leon564/YTD"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

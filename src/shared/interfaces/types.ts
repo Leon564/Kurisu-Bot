@@ -23,6 +23,8 @@ export type MessageBody = {
   media?: Buffer
   isCommand?: boolean
   downloadMedia: () => Promise<Buffer | Nullable>
+  command?: string
+  outCommandMessage: string | undefined
   // message: proto.IMessage
 }
 

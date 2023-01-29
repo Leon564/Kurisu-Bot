@@ -20,10 +20,10 @@ class commandHandler {
     return handler.messageHandler()
   }
 
-  messageHandler () {
+  async messageHandler () {
     const { messageData, socket, message } = this
     if (messageData.message.isCommand) {
-      const reply = commands.execute(messageData)
+      const reply = await commands.execute(messageData)
       console.log(reply)
       this.sendReply(reply)
     }
@@ -58,6 +58,15 @@ class commandHandler {
         await this.socket.sendMessage(
           userId,
           { image: media, caption: data.text },
+          {
+            ...quoted
+          }
+        )
+        break
+      case 'audio':
+        await this.socket.sendMessage(
+          userId,
+          { audio: media, caption: data.text },
           {
             ...quoted
           }
