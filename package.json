@@ -5,16 +5,18 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts --no-mutex",
     "build": "tsc"
   },
   "dependencies": {
     "@adiwajshing/baileys": "^5.0.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@hapi/boom": "^10.0.0",
+    "ezgif-converter": "Leon564/ezgif-converter#main",
     "fs": "^0.0.1-security",
+    "mediatube": "Leon564/mediatube",
     "qrcode-terminal": "^0.12.0",
-    "ytd": "github:Leon564/YTD"
+    "ws-sticker-maker": "Leon564/ws-sticker-maker"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

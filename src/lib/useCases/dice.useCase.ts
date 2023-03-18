@@ -1,4 +1,4 @@
-import { SendData } from '../../shared/interfaces/types'
+import { MessageBody, SendData } from '../../shared/interfaces/types'
 
 const dices = [
   'https://i.ibb.co/MRNM54z/1.webp',
@@ -9,7 +9,7 @@ const dices = [
   'https://i.ibb.co/zbS79jQ/6.webp'
 ]
 
-const dice = (data: any, sides: number = 6): SendData => {
+const dice = (m: MessageBody): SendData => {
   return {
     type: 'sticker',
     media: dices[Math.floor(Math.random() * dices.length)],

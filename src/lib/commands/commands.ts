@@ -1,6 +1,10 @@
 import greet from '../useCases/greetings.useCase'
 import dice from '../useCases/dice.useCase'
 import music from '../useCases/music.useCase'
+import sticker from '../useCases/sticker.useCase'
+import stickerToImage from '../useCases/stickerToImage.useCase'
+import stickerToGif from '../useCases/stickerToGif.useCase'
+import getElapsedSeconds from '../useCases/ping.useCase'
 
 export class commands {
   private comandos: { [key: string]: Function } = {}
@@ -9,7 +13,13 @@ export class commands {
       greet,
       roll: dice,
       hola: greet,
-      music: music
+      music: music,
+      sticker: sticker,
+      stiker: sticker,
+      image:stickerToImage,
+      imagen:stickerToImage,
+      gif:stickerToGif,
+      ping:getElapsedSeconds
     }
   }
 

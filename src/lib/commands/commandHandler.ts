@@ -6,6 +6,7 @@ import {
 } from '../../shared/interfaces/types'
 import { MessageMapper } from '../../shared/infrastructure/baileys/baileys.mapper'
 import { commands } from './commands'
+import { readFileSync } from 'fs'
 
 class commandHandler {
   constructor (
@@ -24,44 +25,26 @@ class commandHandler {
     const { messageData, socket, message } = this
     if (messageData.message.isCommand) {
       const reply = await commands.execute(messageData)
-      console.log(reply)
-      this.sendReply(reply)
+      if (reply)
+      await this.sendReply(reply)
     }
   }
 
   async sendReply (data: SendData) {
-    const { userId } = this.messageData
+    const { userId, device } = this.messageData
 
     //quoting
-    let quoted = data.quoted ? { quoted: this.message } : {}
+    let quoted: any = data.quoted ? { quoted: this.message } : {}
     if (data.fakeQuoted) {
       quoted = MessageMapper.replyFakeMessage({
         text: data.fakeQuoted || 'hola'
       })
     }
 
-    //mediatype
-    let media: any = data.media ? { url: data.media } : {}
-    if (data.media && Buffer.isBuffer(data.media)) {
-      media = data.media
-    }
-    let messageContent: any = {}
-    switch (data.type) {
-      case 'text':
-        messageContent = { text: data.text }
-        break
-      case 'image':
-      case 'video':
-      case 'audio':
-      case 'sticker':
-        messageContent = { [data.type]: media, caption: data.text }
-        break
-
-      default:
-        return
-    }
+    const messageContent = MessageMapper.toSocket(data, device)
 
     await this.socket.sendMessage(userId, messageContent, { ...quoted })
+    //await this.socket.sendMessage(userId, {image:{url:'https://ezgif.com/save/ezgif-2-b94f67342f.gif'}}, { ...quoted })
 
     if (data.reacttion)
       await this.socket.sendMessage(userId, {

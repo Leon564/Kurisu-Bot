@@ -7,6 +7,7 @@ export type MessageType =
   | 'listMessage'
   | 'image'
   | 'video'
+  | 'sticker'
   | 'buttonsMessage'
   | 'unkown'
 export type ResponseType =
@@ -16,16 +17,19 @@ export type ResponseType =
   | 'audio'
   | 'buttonsMessage'
   | 'sticker'
+
 export type Nullable = null | undefined
+
 export type MessageBody = {
   type: MessageType
   text?: string
   media?: Buffer
   isCommand?: boolean
+  isGroup?: boolean
   downloadMedia: () => Promise<Buffer | Nullable>
   command?: string
   outCommandMessage: string | undefined
-  // message: proto.IMessage
+  timestamp: number | Long | Nullable
 }
 
 export type SendData = {
@@ -45,7 +49,10 @@ export type SendData = {
     | '✅'
     | '❌'
     | '🎲'
+    | string
   fakeQuoted?: string
+  ptt?: boolean
+  gifPlayback?: boolean
 }
 
 export type MessageData = {
@@ -54,4 +61,5 @@ export type MessageData = {
   userName: string
   message: MessageBody
   socket: BaileysSocket
+  device: string
 }

@@ -1,11 +1,17 @@
-import { proto, downloadMediaMessage } from '@adiwajshing/baileys'
+import {
+  proto,
+  downloadMediaMessage,
+  getDevice,
+  isJidGroup
+} from '@adiwajshing/baileys'
 import {
   BaileysMessage,
   BaileysSocket,
   MessageBody,
   MessageData,
   MessageType,
-  Nullable
+  Nullable,
+  SendData
 } from '../../interfaces/types'
 import { writeFileSync } from 'fs'
 import config from '../configs/config'
@@ -24,17 +30,57 @@ export class MessageMapper {
       userId: data.key.remoteJid!,
       userName: data.key.participant!,
       message,
-      socket
+      socket,
+      device: getDevice(data.key.id!)
     }
   }
 
-  static replyFakeMessage ({ text, userId }: { text: string; userId?: string }) {
+  static replyFakeMessage ({
+    text,
+    userId
+  }: {
+    text: string
+    userId?: string
+  }): proto.IMessage {
     return {
       quoted: {
         key: { participant: userId || '0@s.whatsapp.net' },
         message: { conversation: text }
       }
+    } as proto.IMessage
+  }
+
+  static toSocket (data: SendData, device: string) {
+    let media: any = data.media ? { url: data.media } : {}
+    if (data.media && Buffer.isBuffer(data.media)) {
+      media = data.media
     }
+
+    const mimetype = device === 'android' ? 'audio/mp4' : 'audio/mpeg'
+
+    let messageContent: any = {}
+    switch (data.type) {
+      case 'text':
+        messageContent = { text: data.text }
+        break
+      case 'image':
+      case 'sticker':
+        messageContent = { [data.type]: media, caption: data.text }
+        break
+      case 'video':
+        messageContent = {
+          video: media,
+          caption: data.text,
+          gifPlayback: !!data.gifPlayback
+        }
+        break
+      case 'audio':
+        messageContent = { audio: media, ptt: !!data.ptt, mimetype }
+        break
+      default:
+        return
+    }
+    return messageContent
   }
 }
 
@@ -43,21 +89,28 @@ class Message implements MessageBody {
   text: string | undefined
   media: Buffer | undefined
   isCommand: boolean = false
+  isGroup: boolean = false
   command: string | undefined
+  timestamp: number | Long | Nullable;
   outCommandMessage: string | undefined
-  private message: proto.IMessage | Nullable
+  private messageData: proto.IMessage | Nullable
   private isReply: boolean = false
 
   private constructor ({ data }: { data: proto.IWebMessageInfo }) {
+    this.timestamp = data.messageTimestamp
     this.type = this.getType(data.message)
     this.text = this.getText(data.message)
     if (config.prefix && this.text?.startsWith(config.prefix)) {
       this.isCommand = true
-      this.command = this.text?.split(' ')[0].replace(config.prefix, '').toLocaleLowerCase()
+      this.command = this.text
+        ?.split(' ')[0]
+        .replace(config.prefix, '')
+        .toLocaleLowerCase()
       this.outCommandMessage = this.text?.split(' ').slice(1).join(' ')
+      this.isGroup = !!isJidGroup(data.key.remoteJid!)
     }
 
-    this.message = data.message
+    this.messageData = data.message
   }
 
   static create ({ data }: { data: proto.IWebMessageInfo }): Message {
@@ -74,6 +127,8 @@ class Message implements MessageBody {
         return 'video'
       case 'imageMessage':
         return 'image'
+      case 'stickerMessage':
+        return 'sticker'
       case 'extendedTextMessage': {
         this.isReply = true
         return this.getReplyType(message)
@@ -108,6 +163,8 @@ class Message implements MessageBody {
         return 'video'
       case 'imageMessage':
         return 'image'
+      case 'stickerMessage':
+        return 'sticker'
       default:
         return 'unkown'
     }
@@ -116,11 +173,12 @@ class Message implements MessageBody {
     if (!this.isCommand) return
     try {
       // validate type
-      const validTypes = ['video', 'image']
+      const validTypes = ['video', 'image', 'sticker']
       if (!validTypes.includes(this.type)) return
-      let message = this.message
+      let message = this.messageData
       if (this.isReply) {
-        message = this.message?.extendedTextMessage?.contextInfo?.quotedMessage
+        message =
+          this.messageData?.extendedTextMessage?.contextInfo?.quotedMessage
       }
       // download media
       const buffer = await downloadMediaMessage(
@@ -134,10 +192,9 @@ class Message implements MessageBody {
           reuploadRequest: null as any
         }
       )
-      writeFileSync(`./xd.jpg`, buffer as Buffer)
+      writeFileSync(`./xd.webp`, buffer as Buffer)
       return buffer as Buffer
     } catch (error) {
-      console.log('error downloading media')
       return
     }
   }
