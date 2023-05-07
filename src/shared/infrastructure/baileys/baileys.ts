@@ -1,10 +1,11 @@
 import makeWASocket, {
   DisconnectReason,
-  fetchLatestBaileysVersion,
+  //fetchLatestBaileysVersion,
   isJidBroadcast,
   makeCacheableSignalKeyStore,
   makeInMemoryStore,
-  MessageRetryMap,
+  //MessageRetryMap,
+  Browsers,
   useMultiFileAuthState
 } from '@adiwajshing/baileys'
 import { Boom } from '@hapi/boom'
@@ -18,7 +19,7 @@ const doReplies = !process.argv.includes('--no-reply')
 
 // external map to store retry counts of messages when decryption/encryption fails
 // keep this out of the socket itself, so as to prevent a message decryption/encryption loop across socket restarts
-const msgRetryCounterMap: MessageRetryMap = {}
+//const msgRetryCounterMap: MessageRetryMap = {}
 
 const store = useStore ? makeInMemoryStore({ logger }) : undefined
 store?.readFromFile('./baileys_store_multi.json')
@@ -30,25 +31,26 @@ setInterval(() => {
 const startSock = async () => {
   const { state, saveCreds } = await useMultiFileAuthState('baileys_auth_info')
   // fetch latest version of WA Web
-  const { version, isLatest } = await fetchLatestBaileysVersion()
-  console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
+  //const { version, isLatest } = await fetchLatestBaileysVersion()
+  //console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
 
   const sock = makeWASocket({
-    version,
+    version:[2, 2308, 7],
     logger,
+    //browser:["Chrome", "10.0.0", "Windows"],
     printQRInTerminal: true,
     auth: {
       creds: state.creds,
       /** caching makes the store faster to send/recv messages */
       keys: makeCacheableSignalKeyStore(state.keys, logger)
     },
-    msgRetryCounterMap,
+    //msgRetryCounterMap,
     generateHighQualityLinkPreview: true,
     // ignore all broadcast messages -- to receive the same
     // comment the line below out
-    shouldIgnoreJid: jid => isJidBroadcast(jid),
+    shouldIgnoreJid: (jid:any) => isJidBroadcast(jid),
     // implement to handle retries
-    getMessage: async key => {
+    getMessage: async (key:any) => {
       if (store) {
         const msg = await store.loadMessage(key.remoteJid!, key.id!)
         return msg?.message || undefined
@@ -60,7 +62,7 @@ const startSock = async () => {
       }
     },
     //fix templateMessage
-    patchMessageBeforeSending: message => {
+    patchMessageBeforeSending: (message:any) => {
       const requiresPatch = !!(
         message.buttonsMessage ||
         // || message.templateMessage
@@ -85,11 +87,11 @@ const startSock = async () => {
 
   store?.bind(sock.ev)
 
-  sock.ev.on('creds.update', async creds => {
+  sock.ev.on('creds.update', async (creds:any) => {
     saveCreds()
   })
 
-  sock.ev.on('connection.update', update => {
+  sock.ev.on('connection.update', (update:any) => {
     const { connection, lastDisconnect } = update
     if (connection === 'close') {
       const shouldReconnect =

@@ -2,7 +2,8 @@ import {
   proto,
   downloadMediaMessage,
   getDevice,
-  isJidGroup
+  isJidGroup,
+  GroupMetadata
 } from '@adiwajshing/baileys'
 import {
   BaileysMessage,
@@ -24,7 +25,7 @@ export class MessageMapper {
     data: proto.IWebMessageInfo
     socket: BaileysSocket
   }): MessageData {
-    const message = Message.create({ data })
+    const message = Message.create({ data, socket })
     return {
       id: data.key.id!,
       userId: data.key.remoteJid!,
@@ -77,6 +78,8 @@ export class MessageMapper {
       case 'audio':
         messageContent = { audio: media, ptt: !!data.ptt, mimetype }
         break
+        case 'mention':
+          messageContent = { text: data.text, mentions: data.mentions }
       default:
         return
     }
@@ -93,13 +96,15 @@ class Message implements MessageBody {
   command: string | undefined
   timestamp: number | Long | Nullable;
   outCommandMessage: string | undefined
+  getGroupMetadata: Promise<GroupMetadata>
   private messageData: proto.IMessage | Nullable
   private isReply: boolean = false
 
-  private constructor ({ data }: { data: proto.IWebMessageInfo }) {
+  private constructor ({ data, socket }: { data: proto.IWebMessageInfo, socket: BaileysSocket }) {
     this.timestamp = data.messageTimestamp
     this.type = this.getType(data.message)
     this.text = this.getText(data.message)
+    this.getGroupMetadata = socket.groupMetadata(data.key.remoteJid!)
     if (config.prefix && this.text?.startsWith(config.prefix)) {
       this.isCommand = true
       this.command = this.text
@@ -113,8 +118,8 @@ class Message implements MessageBody {
     this.messageData = data.message
   }
 
-  static create ({ data }: { data: proto.IWebMessageInfo }): Message {
-    const message = new Message({ data })
+  static create ({ data, socket }: { data: proto.IWebMessageInfo, socket:BaileysSocket }): Message {
+    const message = new Message({ data, socket })
     return message
   }
 
@@ -169,6 +174,7 @@ class Message implements MessageBody {
         return 'unkown'
     }
   }
+
   public async downloadMedia (): Promise<Buffer | Nullable> {
     if (!this.isCommand) return
     try {

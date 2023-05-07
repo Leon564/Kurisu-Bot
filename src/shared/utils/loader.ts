@@ -15,7 +15,7 @@ export class WABot {
   async start () {
     const { bailey, commandHandler } = this.options
     const socket = await bailey()
-    socket.ev.on('messages.upsert', ({ messages }) =>
+    socket.ev.on('messages.upsert', ({ messages }: { messages: any }) =>
       commandHandler.start(socket, messages[0])
     )
   }

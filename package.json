@@ -6,16 +6,13 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts --no-mutex",
+    "build:baileys": "cd node_modules/@adiwajshing/baileys && yarn && cd ../../../ && mv node_modules/@adiwajshing/baileys/src/Defaults/bailey-version.json node_modules/@adiwajshing/baileys/lib/Defaults/bailey-version.json",
     "build": "tsc"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^5.0.0",
-    "@adiwajshing/keyed-db": "^0.2.4",
-    "@hapi/boom": "^10.0.0",
+    "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
     "ezgif-converter": "Leon564/ezgif-converter#main",
-    "fs": "^0.0.1-security",
     "mediatube": "Leon564/mediatube",
-    "qrcode-terminal": "^0.12.0",
     "ws-sticker-maker": "Leon564/ws-sticker-maker"
   },
   "devDependencies": {
