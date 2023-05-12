@@ -1,4 +1,4 @@
-import { SendData } from '../../shared/interfaces/types'
+import { SendData, UseCaseParams } from '../../shared/interfaces/types'
 
 const greets = [
   'Hola',
@@ -18,7 +18,7 @@ const greets = [
   'Oye, que no tienes nada mejor que hacer?'
 ]
 
-const greet = (m: any): SendData => {
+const greet = ({data,utils}: UseCaseParams): SendData => {
   //select a random greet and return it
   const greet = greets[Math.floor(Math.random() * greets.length)]
   return { type: 'text', text: greet, quoted: true }

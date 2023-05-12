@@ -1,4 +1,5 @@
 import WhatsAppSocket, { GroupMetadata, WAMessage, proto } from '@adiwajshing/baileys'
+import { Ytmp3 } from '../../../../mediatube/dist';
 
 export type BaileysMessage = { messages: WAMessage[]; type: MessageType }
 export type BaileysSocket = ReturnType<typeof WhatsAppSocket>
@@ -28,7 +29,7 @@ export type MessageBody = {
   isCommand?: boolean
   isGroup?: boolean
   downloadMedia: () => Promise<Buffer | Nullable>
-  getGroupMetadata: Promise<GroupMetadata | Nullable>
+  getGroupMetadata: Promise<GroupMetadata | Nullable> | Nullable
   command?: string
   outCommandMessage: string | undefined
   timestamp: number | Long | Nullable
@@ -54,8 +55,12 @@ export type SendData = {
     | string
   fakeQuoted?: string
   ptt?: boolean
-  gifPlayback?: boolean,
+  gifPlayback?: boolean
   mentions?: string[]
+  userId ?: string
+  device ?: string
+  socket ?: BaileysSocket
+  messageReactKey?: string
 }
 
 export type MessageData = {
@@ -65,4 +70,14 @@ export type MessageData = {
   message: MessageBody
   socket: BaileysSocket
   device: string
+}
+
+export type Utils = {
+  mp3Downloader: Ytmp3
+  sendReply: (data: SendData) => Promise<void> | Nullable
+}
+
+export type UseCaseParams = {
+  data: MessageData
+  utils: Utils
 }

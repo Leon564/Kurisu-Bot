@@ -5,10 +5,12 @@ import sticker from '../useCases/sticker.useCase'
 import stickerToImage from '../useCases/stickerToImage.useCase'
 import stickerToGif from '../useCases/stickerToGif.useCase'
 import getElapsedSeconds from '../useCases/ping.useCase'
+import { Utils } from '../../shared/interfaces/types'
+import help from '../useCases/help.usecase'
 
 export class commands {
   private comandos: { [key: string]: Function } = {}
-  constructor (private data: any) {
+  constructor (private data: any, private utils: Utils) {
     this.comandos = {
       greet,
       roll: dice,
@@ -16,21 +18,26 @@ export class commands {
       music: music,
       sticker: sticker,
       stiker: sticker,
-      image:stickerToImage,
-      imagen:stickerToImage,
-      gif:stickerToGif,
-      ping:getElapsedSeconds
+      image: stickerToImage,
+      imagen: stickerToImage,
+      gif: stickerToGif,
+      ping: getElapsedSeconds,
+      help: help
     }
   }
 
-  static execute (data: any) {
-    return new commands(data).getCommand()
+  static execute (data: any, utils: Utils) {
+    return new commands(data, utils).getCommand()
   }
 
   async getCommand () {
     const command = this.data.message.command
     if (this.comandos[command]) {
-      const response = await this.comandos[command](this.data.message)
+      //console.log(this.data)
+      const response = await this.comandos[command]({
+        data: this.data,
+        utils: this.utils
+      })
       return response
     }
   }

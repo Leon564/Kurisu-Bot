@@ -1,7 +1,7 @@
-import { MessageBody, SendData } from "../../shared/interfaces/types"
+import { MessageBody, SendData, UseCaseParams } from "../../shared/interfaces/types"
 
-const getElapsedSeconds = (m: MessageBody): SendData => {
-    const { timestamp } = m
+const getElapsedSeconds = ({data,utils}: UseCaseParams): SendData => {
+    const { timestamp } = data.message
     const now = new Date();
     const then = new Date(timestamp as number * 1000);
     const elapsedMilliseconds = now.getTime() - then.getTime();

@@ -1,8 +1,9 @@
-import { BaileysSocket } from '../interfaces/types'
+import { BaileysSocket, Utils } from '../interfaces/types'
 
 type Options = {
   bailey: () => Promise<BaileysSocket>
   commandHandler: any
+  utils?: Utils
 }
 
 export class WABot {
@@ -16,7 +17,7 @@ export class WABot {
     const { bailey, commandHandler } = this.options
     const socket = await bailey()
     socket.ev.on('messages.upsert', ({ messages }: { messages: any }) =>
-      commandHandler.start(socket, messages[0])
+      commandHandler.start(socket, messages[0], this.options.utils)
     )
   }
 }

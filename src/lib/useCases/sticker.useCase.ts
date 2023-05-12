@@ -1,9 +1,9 @@
 import Sticker from 'ws-sticker-maker'
 
-import { MessageBody, SendData } from '../../shared/interfaces/types'
+import { SendData, UseCaseParams } from '../../shared/interfaces/types'
 
-const sticker = async (m: MessageBody): Promise<SendData> => {
-  const media = await m.downloadMedia()
+const sticker = async ({data,utils}: UseCaseParams): Promise<SendData> => {
+  const media = await data.message.downloadMedia()
   const stk = await new Sticker(media!).toBuffer()
   return {
     type: 'sticker',

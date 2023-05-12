@@ -33,6 +33,7 @@ export class MessageMapper {
       message,
       socket,
       device: getDevice(data.key.id!)
+      //device: 'android'
     }
   }
 
@@ -96,7 +97,7 @@ class Message implements MessageBody {
   command: string | undefined
   timestamp: number | Long | Nullable;
   outCommandMessage: string | undefined
-  getGroupMetadata: Promise<GroupMetadata>
+  getGroupMetadata: Promise<GroupMetadata> | Nullable
   private messageData: proto.IMessage | Nullable
   private isReply: boolean = false
 
@@ -104,7 +105,6 @@ class Message implements MessageBody {
     this.timestamp = data.messageTimestamp
     this.type = this.getType(data.message)
     this.text = this.getText(data.message)
-    this.getGroupMetadata = socket.groupMetadata(data.key.remoteJid!)
     if (config.prefix && this.text?.startsWith(config.prefix)) {
       this.isCommand = true
       this.command = this.text
@@ -113,6 +113,9 @@ class Message implements MessageBody {
         .toLocaleLowerCase()
       this.outCommandMessage = this.text?.split(' ').slice(1).join(' ')
       this.isGroup = !!isJidGroup(data.key.remoteJid!)
+      if (this.isGroup) {
+        this.getGroupMetadata = socket.groupMetadata(data.key.remoteJid!)
+      }
     }
 
     this.messageData = data.message

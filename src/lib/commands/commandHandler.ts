@@ -2,7 +2,8 @@ import { proto } from '@adiwajshing/baileys'
 import {
   BaileysSocket,
   MessageData,
-  SendData
+  SendData,
+  Utils
 } from '../../shared/interfaces/types'
 import { MessageMapper } from '../../shared/infrastructure/baileys/baileys.mapper'
 import { commands } from './commands'
@@ -12,21 +13,30 @@ class commandHandler {
   constructor (
     private socket: BaileysSocket,
     private message: proto.IWebMessageInfo,
-    private messageData: MessageData
-  ) {}
+    private messageData: MessageData,
+    private utils: Utils
+  ) {
+    this.utils.sendReply = this.sendDReply
+  }
 
-  static async start (socket: BaileysSocket, message: proto.IWebMessageInfo) {
+  static async start (
+    socket: BaileysSocket,
+    message: proto.IWebMessageInfo,
+    utils: Utils
+  ) {
+    console.log('message', message.message?.chat?.displayName)
     const messageData = MessageMapper.toDomain({ data: message, socket })
-    const handler = new commandHandler(socket, message, messageData)
+    console.log('messageData', messageData.message.command)
+    const handler = new commandHandler(socket, message, messageData, utils)
     return handler.messageHandler()
   }
 
   async messageHandler () {
-    const { messageData, socket, message } = this
+    const { messageData, socket, message, utils } = this
     if (messageData.message.isCommand) {
-      const reply = await commands.execute(messageData)
-      if (reply)
-      await this.sendReply(reply)
+      const reply = await commands.execute(messageData, utils)
+      //console.log('reply', reply)
+      if (reply) await this.sendReply(reply)
     }
   }
 
@@ -42,13 +52,37 @@ class commandHandler {
     }
 
     const messageContent = MessageMapper.toSocket(data, device)
-
-    await this.socket.sendMessage(userId, messageContent, { ...quoted })
+    console.log(data.userId)
+    console.log({userId, usd: data.userId})
+    await this.socket.sendMessage(data.userId || userId, messageContent, { ...quoted })
     //await this.socket.sendMessage(userId, {image:{url:'https://ezgif.com/save/ezgif-2-b94f67342f.gif'}}, { ...quoted })
 
     if (data.reacttion)
       await this.socket.sendMessage(userId, {
         react: { text: data.reacttion, key: this.message.key }
+      })
+  }
+
+  async sendDReply (data: SendData) {
+    //const { userId, device } = this.messageData
+
+    //quoting
+    let quoted: {} = {}
+    if (data.fakeQuoted) {
+      quoted = MessageMapper.replyFakeMessage({
+        text: data.fakeQuoted || 'hola'
+      })
+    }
+
+    const messageContent = MessageMapper.toSocket(data, data.device || 'Android')
+    console.log(data.userId)
+    //console.log({userId, usd: data.userId})
+    await data.socket.sendMessage(data.userId, messageContent, { ...quoted })
+    //await this.socket.sendMessage(userId, {image:{url:'https://ezgif.com/save/ezgif-2-b94f67342f.gif'}}, { ...quoted })
+
+    if (data.reacttion && data.messageReactKey)
+      await data.socket.sendMessage(data.userId, {
+        react: { text: data.reacttion, key: data.messageReactKey}
       })
   }
 }
