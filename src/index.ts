@@ -1,7 +1,7 @@
 import { WABot } from './shared/utils/loader'
 import socket from './shared/infrastructure/baileys/baileys'
 import commandHandler from './lib/commands/commandHandler'
-import MediaTube from 'C:/Users/nleon/nodejs projects/mediatube'
+import MediaTube from 'mediatube'
 
 WABot.setup({
   bailey: socket,
@@ -9,7 +9,8 @@ WABot.setup({
   utils: {
     mp3Downloader: new MediaTube({
       path: './',
-      AudioQuality: 'highestaudio'
+      AudioQuality: 'highestaudio',
+      query:"mp3"
     }).Mp3Downloader(),
     sendReply: null as any
 

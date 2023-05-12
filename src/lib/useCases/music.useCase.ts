@@ -1,4 +1,4 @@
-import mediaTube, { Ytmp3 } from 'C:/Users/nleon/nodejs projects/mediatube'
+import mediaTube from 'mediatube'
 import fs from 'fs'
 import { SendData, UseCaseParams } from '../../shared/interfaces/types'
 

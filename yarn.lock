@@ -1033,6 +1033,21 @@ mediatube@Leon564/mediatube:
     youtube-mp3-downloader "^0.7.11"
     ytdl-core "^4.11.2"
 
+"mediatube@github:Leon564/MediaTube":
+  version "1.0.0"
+  resolved "https://codeload.github.com/Leon564/MediaTube/tar.gz/b906ce70f70c6302d36123173809e365b7a73c15"
+  dependencies:
+    "@ffmpeg-installer/ffmpeg" "^1.1.0"
+    crypto "^1.0.1"
+    fluent-ffmpeg "^2.1.2"
+    fs "^0.0.1-security"
+    got "11.8.2"
+    os "^0.1.2"
+    path "^0.12.7"
+    scrape-yt "^1.4.8"
+    youtube-mp3-downloader "^0.7.11"
+    ytdl-core "^4.11.2"
+
 mime-db@1.52.0:
   version "1.52.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
