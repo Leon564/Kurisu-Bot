@@ -1,6 +1,5 @@
 import greet from '../useCases/greetings.useCase'
 import dice from '../useCases/dice.useCase'
-import music from '../useCases/music.useCase'
 import sticker from '../useCases/sticker.useCase'
 import stickerToImage from '../useCases/stickerToImage.useCase'
 import stickerToGif from '../useCases/stickerToGif.useCase'
@@ -10,12 +9,11 @@ import help from '../useCases/help.usecase'
 
 export class commands {
   private comandos: { [key: string]: Function } = {}
-  constructor (private data: any, private utils: Utils) {
+  constructor (private data: any) {
     this.comandos = {
       greet,
       roll: dice,
       hola: greet,
-      music: music,
       sticker: sticker,
       stiker: sticker,
       image: stickerToImage,
@@ -26,8 +24,8 @@ export class commands {
     }
   }
 
-  static execute (data: any, utils: Utils) {
-    return new commands(data, utils).getCommand()
+  static execute (data: any) {
+    return new commands(data).getCommand()
   }
 
   async getCommand () {
@@ -35,8 +33,7 @@ export class commands {
     if (this.comandos[command]) {
       //console.log(this.data)
       const response = await this.comandos[command]({
-        data: this.data,
-        utils: this.utils
+        data: this.data
       })
       return response
     }

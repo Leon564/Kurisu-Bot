@@ -13,28 +13,21 @@ class commandHandler {
   constructor (
     private socket: BaileysSocket,
     private message: proto.IWebMessageInfo,
-    private messageData: MessageData,
-    private utils: Utils
-  ) {
-    this.utils.sendReply = this.sendDReply
-  }
+    private messageData: MessageData
+  ) {}
 
-  static async start (
-    socket: BaileysSocket,
-    message: proto.IWebMessageInfo,
-    utils: Utils
-  ) {
+  static async start (socket: BaileysSocket, message: proto.IWebMessageInfo) {
     console.log('message', message.message?.chat?.displayName)
     const messageData = MessageMapper.toDomain({ data: message, socket })
     console.log('messageData', messageData.message.command)
-    const handler = new commandHandler(socket, message, messageData, utils)
+    const handler = new commandHandler(socket, message, messageData)
     return handler.messageHandler()
   }
 
   async messageHandler () {
-    const { messageData, socket, message, utils } = this
+    const { messageData, socket, message } = this
     if (messageData.message.isCommand) {
-      const reply = await commands.execute(messageData, utils)
+      const reply = await commands.execute(messageData)
       //console.log('reply', reply)
       if (reply) await this.sendReply(reply)
     }
@@ -53,8 +46,10 @@ class commandHandler {
 
     const messageContent = MessageMapper.toSocket(data, device)
     console.log(data.userId)
-    console.log({userId, usd: data.userId})
-    await this.socket.sendMessage(data.userId || userId, messageContent, { ...quoted })
+    console.log({ userId, usd: data.userId })
+    await this.socket.sendMessage(data.userId || userId, messageContent, {
+      ...quoted
+    })
     //await this.socket.sendMessage(userId, {image:{url:'https://ezgif.com/save/ezgif-2-b94f67342f.gif'}}, { ...quoted })
 
     if (data.reacttion)
@@ -74,7 +69,10 @@ class commandHandler {
       })
     }
 
-    const messageContent = MessageMapper.toSocket(data, data.device || 'Android')
+    const messageContent = MessageMapper.toSocket(
+      data,
+      data.device || 'Android'
+    )
     console.log(data.userId)
     //console.log({userId, usd: data.userId})
     await data.socket.sendMessage(data.userId, messageContent, { ...quoted })
@@ -82,7 +80,7 @@ class commandHandler {
 
     if (data.reacttion && data.messageReactKey)
       await data.socket.sendMessage(data.userId, {
-        react: { text: data.reacttion, key: data.messageReactKey}
+        react: { text: data.reacttion, key: data.messageReactKey }
       })
   }
 }

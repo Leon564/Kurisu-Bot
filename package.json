@@ -13,7 +13,6 @@
     "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
     "ezgif-converter": "Leon564/ezgif-converter#main",
     "fs": "^0.0.1-security",
-    "mediatube": "github:Leon564/MediaTube",
     "ws-sticker-maker": "Leon564/ws-sticker-maker"
   },
   "devDependencies": {
