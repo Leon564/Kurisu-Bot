@@ -17,7 +17,7 @@ class commandHandler {
   ) {}
 
   static async start (socket: BaileysSocket, message: proto.IWebMessageInfo) {
-    console.log('message', message.message?.chat?.displayName)
+    //console.log('message', message.message?.chat?.displayName)
     const messageData = MessageMapper.toDomain({ data: message, socket })
     console.log('messageData', messageData.message.command)
     const handler = new commandHandler(socket, message, messageData)
