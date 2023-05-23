@@ -16,6 +16,8 @@ import {
 } from '../../interfaces/types'
 import { writeFileSync } from 'fs'
 import config from '../configs/config'
+import isStream from '../../utils/isStream'
+
 
 export class MessageMapper {
   static toDomain ({
@@ -56,6 +58,8 @@ export class MessageMapper {
     let media: any = data.media ? { url: data.media } : {}
     if (data.media && Buffer.isBuffer(data.media)) {
       media = data.media
+    }else if (data.media && isStream(data.media)) {
+      media = {stream: data.media}
     }
 
     const mimetype = device === 'android' ? 'audio/mp4' : 'audio/mpeg'

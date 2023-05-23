@@ -1,5 +1,5 @@
 import WhatsAppSocket, { GroupMetadata, WAMessage, proto } from '@adiwajshing/baileys'
-import { Ytmp3 } from '../../../../mediatube/dist';
+import { Stream } from 'stream';
 
 export type BaileysMessage = { messages: WAMessage[]; type: MessageType }
 export type BaileysSocket = ReturnType<typeof WhatsAppSocket>
@@ -38,7 +38,7 @@ export type MessageBody = {
 export type SendData = {
   type: ResponseType
   text?: string
-  media?: Buffer | string
+  media?: Buffer | string | Stream
   quoted?: boolean
   reacttion?:
     | '❤️'
@@ -73,7 +73,6 @@ export type MessageData = {
 }
 
 export type Utils = {
-  mp3Downloader: Ytmp3
   sendReply: (data: SendData) => Promise<void> | Nullable
 }
 
