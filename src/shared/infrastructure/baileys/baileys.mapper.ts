@@ -145,6 +145,8 @@ class Message implements MessageBody {
         this.isReply = true
         return this.getReplyType(message)
       }
+      case "senderKeyDistributionMessage":
+        return this.getType({[Object.keys(message!)[2]]: "text"})
       default:
         return 'unkown'
     }
