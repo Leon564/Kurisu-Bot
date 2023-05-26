@@ -27,8 +27,8 @@ class commandHandler {
   async messageHandler () {
     const { messageData, socket, message } = this
     if (messageData.message.isCommand) {
+      await socket.sendPresenceUpdate('composing', messageData.userId) 
       const reply = await commands.execute(messageData)
-      //console.log('reply', reply)
       if (reply) await this.sendReply(reply)
     }
   }
