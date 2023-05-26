@@ -34,13 +34,16 @@ class commandHandler {
   }
 
   async sendReply (data: SendData) {
-    const { userId, device } = this.messageData
+    const { userId, device, socket } = this.messageData
 
     //quoting
     let quoted: any = data.quoted ? { quoted: this.message } : {}
     if (data.fakeQuoted) {
       quoted = MessageMapper.replyFakeMessage({
-        text: data.fakeQuoted || 'hola'
+        text: data.fakeQuoted || 'hola',
+        userId: socket.user.id.includes(":")
+        ? socket.user.id.split(":")[0] + "@s.whatsapp.net"
+        : socket.user.id
       })
     }
 
