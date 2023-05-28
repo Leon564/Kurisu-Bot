@@ -563,6 +563,20 @@
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.12.tgz#a285379b432cc8d103b69d223cbb159a253cf2f7"
   integrity sha512-YVtyAPqpefU+Mm/qqnOANW6IkqKpCSrarcyV269C8MA8Ux0dbkEuQwM/4CjL47kVEM2LgBef/ETfkH+c6+moFA==
 
+"@whiskeysockets/baileys@github:WhiskeySockets/Baileys":
+  version "6.1.0"
+  resolved "https://codeload.github.com/WhiskeySockets/Baileys/tar.gz/58ffd33a1e8e69c9fc7f6d0d9fe9939682c10d9a"
+  dependencies:
+    "@hapi/boom" "^9.1.3"
+    axios "^1.3.3"
+    futoin-hkdf "^1.5.1"
+    libsignal "https://github.com/adiwajshing/libsignal-node.git"
+    music-metadata "^7.12.3"
+    node-cache "^5.1.2"
+    pino "^7.0.0"
+    protobufjs "^6.11.3"
+    ws "^8.0.0"
+
 acorn-walk@^8.1.1:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"

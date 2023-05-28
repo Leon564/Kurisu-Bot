@@ -1,4 +1,5 @@
-import MediaTube, {MusicSearchParams} from "mediatube"
+//import MediaTube, {MusicSearchParams} from "mediatube"
+import MediaTube from "C:/Users/nleon/NodeJs Projects/mediatube"
 import { SendData, UseCaseParams } from '../../shared/interfaces/types'
 
 const music = async ({ data, utils }: UseCaseParams): Promise<SendData> => {

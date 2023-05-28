@@ -1,4 +1,5 @@
 /node_modules
 /baileys_auth_info
+/dist
 baileys_store_multi.json
 yarn-error.log
