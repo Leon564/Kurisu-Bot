@@ -9,7 +9,7 @@ const music = async ({ data, utils }: UseCaseParams): Promise<SendData> => {
         type: 'audio',
         media: media.file,
         fakeQuoted: media.title,
-        reacttion: '🤖'
+        reacttion: '🎵'
     }
 }
 
