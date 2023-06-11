@@ -10,13 +10,13 @@ import { commands } from './commands'
 import { readFileSync } from 'fs'
 
 class commandHandler {
-  constructor (
+  constructor(
     private socket: BaileysSocket,
     private message: proto.IWebMessageInfo,
     private messageData: MessageData
-  ) {}
+  ) { }
 
-  static async start (socket: BaileysSocket, message: proto.IWebMessageInfo) {
+  static async start(socket: BaileysSocket, message: proto.IWebMessageInfo) {
     //console.log('message', message.message?.chat?.displayName)
     const messageData = MessageMapper.toDomain({ data: message, socket })
     console.log('messageData', messageData.message.command)
@@ -24,16 +24,16 @@ class commandHandler {
     return handler.messageHandler()
   }
 
-  async messageHandler () {
+  async messageHandler() {
     const { messageData, socket, message } = this
     if (messageData.message.isCommand) {
-      await socket.sendPresenceUpdate('composing', messageData.userId) 
+      await socket.sendPresenceUpdate('composing', messageData.userId)
       const reply = await commands.execute(messageData)
       if (reply) await this.sendReply(reply)
     }
   }
 
-  async sendReply (data: SendData) {
+  async sendReply(data: SendData) {
     const { userId, device, socket } = this.messageData
 
     //quoting
@@ -41,9 +41,9 @@ class commandHandler {
     if (data.fakeQuoted) {
       quoted = MessageMapper.replyFakeMessage({
         text: data.fakeQuoted || 'hola',
-        userId: socket.user.id.includes(":")
-        ? socket.user.id.split(":")[0] + "@s.whatsapp.net"
-        : socket.user.id
+        userId: socket.user!.id.includes(":")
+          ? socket.user!.id.split(":")[0] + "@s.whatsapp.net"
+          : socket.user!.id
       })
     }
 
@@ -61,7 +61,7 @@ class commandHandler {
       })
   }
 
-  async sendDReply (data: SendData) {
+  async sendDReply(data: SendData) {
     //const { userId, device } = this.messageData
 
     //quoting
@@ -78,12 +78,12 @@ class commandHandler {
     )
     console.log(data.userId)
     //console.log({userId, usd: data.userId})
-    await data.socket.sendMessage(data.userId, messageContent, { ...quoted })
+    await data.socket!.sendMessage(data.userId!, messageContent, { ...quoted })
     //await this.socket.sendMessage(userId, {image:{url:'https://ezgif.com/save/ezgif-2-b94f67342f.gif'}}, { ...quoted })
 
     if (data.reacttion && data.messageReactKey)
-      await data.socket.sendMessage(data.userId, {
-        react: { text: data.reacttion, key: data.messageReactKey }
+      await data.socket!.sendMessage(data.userId!, {
+        react: { text: data.reacttion, key: data.messageReactKey as any }
       })
   }
 }

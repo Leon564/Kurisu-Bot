@@ -3,7 +3,7 @@ import {
   downloadMediaMessage,
   getDevice,
   isJidGroup,
-  GroupMetadata
+  GroupMetadata,
 } from '@whiskeysockets/baileys'
 import {
   BaileysMessage,
