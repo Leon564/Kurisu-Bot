@@ -4,7 +4,7 @@ import {
   getDevice,
   isJidGroup,
   GroupMetadata
-} from '@adiwajshing/baileys'
+} from '@whiskeysockets/baileys'
 import {
   BaileysMessage,
   BaileysSocket,

@@ -1,7 +1,7 @@
 import sharp from 'sharp'
-import { SendData, UseCaseParams } from '../../shared/interfaces/types'
+import { MessageData, SendData } from '../../shared/interfaces/types'
 
-const stickerToImage = async ({data,utils}: UseCaseParams): Promise<SendData> => {
+const stickerToImage = async (data: MessageData): Promise<SendData> => {
   if (data.message.type !== 'sticker')
     return { type: 'text', text: 'Este comando funciona solo con stickers' }
   const media = await data.message.downloadMedia()

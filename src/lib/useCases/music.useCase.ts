@@ -1,10 +1,10 @@
-import MediaTube, {MusicSearchParams} from "mediatube"
-import { SendData, UseCaseParams } from '../../shared/interfaces/types'
+import MediaTube, { MusicSearchParams } from "mediatube"
+import { MessageData, SendData } from '../../shared/interfaces/types'
 
-const music = async ({ data, utils }: UseCaseParams): Promise<SendData> => {
-    const media = await new MediaTube({query: data.message.outCommandMessage}).toMp3()
+const music = async (data: MessageData): Promise<SendData> => {
+    const media = await new MediaTube({ query: data.message.outCommandMessage }).toMp3()
 
-    return { 
+    return {
         type: 'audio',
         media: media.file,
         fakeQuoted: media.title,

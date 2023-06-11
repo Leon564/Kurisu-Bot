@@ -7,9 +7,9 @@ import makeWASocket, {
   //MessageRetryMap,
   Browsers,
   useMultiFileAuthState
-} from '@adiwajshing/baileys'
+} from '@whiskeysockets/baileys'
 import { Boom } from '@hapi/boom'
-import MAIN_LOGGER from '@adiwajshing/baileys/lib/Utils/logger'
+import MAIN_LOGGER from '@whiskeysockets/baileys/lib/Utils/logger'
 
 const logger = MAIN_LOGGER.child({})
 logger.level = 'silent'

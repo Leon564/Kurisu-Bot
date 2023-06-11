@@ -1,6 +1,6 @@
-import { MessageBody, SendData, UseCaseParams } from "../../shared/interfaces/types"
+import { MessageBody, MessageData, SendData } from "../../shared/interfaces/types"
 
-const getElapsedSeconds = ({data,utils}: UseCaseParams): SendData => {
+const getElapsedSeconds = (data: MessageData): SendData => {
     const { timestamp } = data.message
     const now = new Date();
     const then = new Date(timestamp as number * 1000);
@@ -8,7 +8,7 @@ const getElapsedSeconds = ({data,utils}: UseCaseParams): SendData => {
     const elapsedSeconds = elapsedMilliseconds / 1000;
     const time = elapsedSeconds.toFixed(2) + "s";
 
-    return {type: "text", text: '🏓 PONG! • ' + time,  quoted: true, reacttion: '🏓'} 
+    return { type: "text", text: '🏓 PONG! • ' + time, quoted: true, reacttion: '🏓' }
 }
 
 export default getElapsedSeconds

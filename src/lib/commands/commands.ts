@@ -11,7 +11,7 @@ import video from '../useCases/video.useCase'
 
 export class commands {
   private comandos: { [key: string]: Function } = {}
-  constructor (private data: any) {
+  constructor(private data: any) {
     this.comandos = {
       greet,
       roll: dice,
@@ -29,17 +29,17 @@ export class commands {
     }
   }
 
-  static execute (data: any) {
+  static execute(data: any) {
     return new commands(data).getCommand()
   }
 
-  async getCommand () {
+  async getCommand() {
     const command = this.data.message.command
     if (this.comandos[command]) {
       //console.log(this.data)
-      const response = await this.comandos[command]({
-        data: this.data
-      })
+      const response = await this.comandos[command](
+        this.data
+      )
       return response
     }
   }

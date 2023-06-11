@@ -2,20 +2,6 @@
 # yarn lockfile v1
 
 
-"@adiwajshing/baileys@github:WhiskeySockets/Baileys":
-  version "5.0.0"
-  resolved "https://codeload.github.com/WhiskeySockets/Baileys/tar.gz/b7878e531144133b48d9e5970787e7b256d21063"
-  dependencies:
-    "@hapi/boom" "^9.1.3"
-    axios "^1.3.3"
-    futoin-hkdf "^1.5.1"
-    libsignal "https://github.com/adiwajshing/libsignal-node.git"
-    music-metadata "^7.12.3"
-    node-cache "^5.1.2"
-    pino "^7.0.0"
-    protobufjs "^6.11.3"
-    ws "^8.0.0"
-
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -563,18 +549,21 @@
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.12.tgz#a285379b432cc8d103b69d223cbb159a253cf2f7"
   integrity sha512-YVtyAPqpefU+Mm/qqnOANW6IkqKpCSrarcyV269C8MA8Ux0dbkEuQwM/4CjL47kVEM2LgBef/ETfkH+c6+moFA==
 
-"@whiskeysockets/baileys@github:WhiskeySockets/Baileys":
-  version "6.1.0"
-  resolved "https://codeload.github.com/WhiskeySockets/Baileys/tar.gz/58ffd33a1e8e69c9fc7f6d0d9fe9939682c10d9a"
+"@whiskeysockets/baileys@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@whiskeysockets/baileys/-/baileys-6.2.1.tgz#3828038439ea9ee840eb1ab6cecf488f813f1151"
+  integrity sha512-YI3dyxsod30nwWkldMhjFC+8qAgFe8QcKC6vZUSAV7tqrnbCCxnb0qJdBMkZ2LF2dNDPy3clFRvMR5dVGZOTxw==
   dependencies:
     "@hapi/boom" "^9.1.3"
     axios "^1.3.3"
     futoin-hkdf "^1.5.1"
+    libphonenumber-js "^1.10.20"
     libsignal "https://github.com/adiwajshing/libsignal-node.git"
     music-metadata "^7.12.3"
     node-cache "^5.1.2"
     pino "^7.0.0"
     protobufjs "^6.11.3"
+    uuid "^9.0.0"
     ws "^8.0.0"
 
 acorn-walk@^8.1.1:
@@ -1319,9 +1308,14 @@ keyv@^4.0.0:
   dependencies:
     json-buffer "3.0.1"
 
-"libsignal@https://github.com/adiwajshing/libsignal-node.git":
+libphonenumber-js@^1.10.20:
+  version "1.10.34"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.34.tgz#63374bb988688ac28b03ed6c4b344d412199d56c"
+  integrity sha512-p6g4NaQH4gK1gre32+kV14Mk6GPo2EDcPDvjbi+D2ycsPFsN4gVWNbs0itdHLZqByg6YEK8mE7OeP200I/ScTQ==
+
+"libsignal@git+https://github.com/adiwajshing/libsignal-node.git":
   version "2.0.1"
-  resolved "https://github.com/adiwajshing/libsignal-node.git#11dbd962ea108187c79a7c46fe4d6f790e23da97"
+  resolved "git+https://github.com/adiwajshing/libsignal-node.git#11dbd962ea108187c79a7c46fe4d6f790e23da97"
   dependencies:
     curve25519-js "^0.0.4"
     protobufjs "6.8.8"
@@ -2163,6 +2157,11 @@ util@^0.10.3:
   integrity sha512-0Pm9hTQ3se5ll1XihRic3FDIku70C+iHUdT/W926rSgHV5QgXsYbKZN8MSC3tJtSkhuROzvsQjAaFENRXr+19A==
   dependencies:
     inherits "2.0.3"
+
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

@@ -1,4 +1,4 @@
-import WhatsAppSocket, { GroupMetadata, WAMessage, proto } from '@adiwajshing/baileys'
+import WhatsAppSocket, { GroupMetadata, WAMessage, proto } from '@whiskeysockets/baileys'
 import { Stream } from 'stream';
 
 export type BaileysMessage = { messages: WAMessage[]; type: MessageType }
@@ -74,9 +74,4 @@ export type MessageData = {
 
 export type Utils = {
   sendReply: (data: SendData) => Promise<void> | Nullable
-}
-
-export type UseCaseParams = {
-  data: MessageData
-  utils: Utils
 }
