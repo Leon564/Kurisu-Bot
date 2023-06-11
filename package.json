@@ -7,12 +7,11 @@
     "start": "ts-node src/index.ts",
     "start:prod": "node dist/index.js",
     "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts --no-mutex",
-    "build:baileys": "cd node_modules/@adiwajshing/baileys && yarn",
+    "build:baileys": "cd node_modules/@whiskeysockets/baileys && yarn",
     "build": "ts-node build.ts && tsc -p ."
   },
   "dependencies": {
-    "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
-    "@whiskeysockets/baileys": "github:WhiskeySockets/Baileys",
+    "@whiskeysockets/baileys": "^6.2.1",
     "ezgif-converter": "Leon564/ezgif-converter#main",
     "fs": "^0.0.1-security",
     "mediatube": "Leon564/mediatube#main",
