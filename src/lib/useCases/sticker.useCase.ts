@@ -1,27 +1,6 @@
 import Sticker from 'ws-sticker-maker'
-
 import { MessageData, SendData } from '../../shared/interfaces/types'
-import { writeFileSync } from 'fs'
-const stickerTypes = ['full', 'crop', 'circle', 'default']
-
-function detectAndRemoveStickerType(msg: string) {
-  for (let i = 0; i < stickerTypes.length; i++) {
-    const stickerType = stickerTypes[i]
-    if (msg.includes(stickerType)) {
-      msg = msg.replace(`$${stickerType}`, '')
-      msg = msg.replace(/\$\s*$/, '')
-      msg = msg.trim()
-      return { stickerType, msg }
-    }
-  }
-
-  return { stickerType: 'default', msg }
-}
-
-const detectAuthorAndPack = (msg: string) => {
-  const values = msg.split('$').slice(1)
-  return { author: values[1], pack: values[0], msg }
-}
+const SRICKER_TYPES = ['full', 'crop', 'circle', 'default']
 
 const sticker = async (data: MessageData): Promise<SendData> => {
   const media = await data.message.downloadMedia()
@@ -35,6 +14,25 @@ const sticker = async (data: MessageData): Promise<SendData> => {
     quoted: true,
     reacttion: '✅'
   }
+}
+
+function detectAndRemoveStickerType(msg: string) {
+  for (let i = 0; i < SRICKER_TYPES.length; i++) {
+    const stickerType = SRICKER_TYPES[i]
+    if (msg.includes(stickerType)) {
+      msg = msg.replace(`$${stickerType}`, '')
+      msg = msg.replace(/\$\s*$/, '')
+      msg = msg.trim()
+      return { stickerType, msg }
+    }
+  }
+
+  return { stickerType: 'default', msg }
+}
+
+function detectAuthorAndPack(msg: string) {
+  const values = msg.split('$').slice(1)
+  return { author: values[1], pack: values[0], msg }
 }
 
 export default sticker
