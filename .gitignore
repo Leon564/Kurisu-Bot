@@ -3,3 +3,6 @@
 /dist
 baileys_store_multi.json
 yarn-error.log
+
+#env files
+.env

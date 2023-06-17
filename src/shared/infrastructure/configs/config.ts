@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 export default {
-    prefix: '#',
+    prefix: process.env.PREFIX || '!',
 }
