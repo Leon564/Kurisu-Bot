@@ -207,7 +207,7 @@ class Message implements MessageBody {
           reuploadRequest: null as any
         }
       )
-      writeFileSync(`./xd.webp`, buffer as Buffer)
+      //writeFileSync(`./xd.webp`, buffer as Buffer)
       return buffer as Buffer
     } catch (error) {
       return
