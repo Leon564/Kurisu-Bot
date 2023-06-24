@@ -1,4 +1,5 @@
 import { BaileysSocket, Utils } from '../interfaces/types'
+const doReplies = !process.argv.includes("--no-reply");
 
 type Options = {
   bailey: () => Promise<BaileysSocket>
@@ -16,7 +17,7 @@ export class WABot {
     const { bailey, commandHandler } = this.options
     const socket = await bailey()
     socket.ev.on('messages.upsert', ({ messages, type }: { messages: any, type:string }) => {
-      if (type !== 'notify') return
+      if (type !== 'notify' && doReplies) return
       commandHandler.start(socket, messages[0])
     })
   }
