@@ -27,6 +27,7 @@ class commandHandler {
       await socket.sendPresenceUpdate("composing", messageData.userId);
       const reply = await commands.execute(messageData);
       if (reply) await this.sendReply(reply);
+      await socket.sendPresenceUpdate("paused", messageData.userId);
     }
   }
 
