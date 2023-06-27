@@ -55,6 +55,7 @@ const startSock = async () => {
       /** caching makes the store faster to send/recv messages */
       keys: makeCacheableSignalKeyStore(state.keys, logger),
     },
+    keepAliveIntervalMs: 60_000,
     msgRetryCounterCache,
     syncFullHistory: true,
     generateHighQualityLinkPreview: true,
