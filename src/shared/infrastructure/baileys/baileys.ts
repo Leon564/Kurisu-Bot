@@ -56,6 +56,7 @@ const startSock = async () => {
       keys: makeCacheableSignalKeyStore(state.keys, logger),
     },
     msgRetryCounterCache,
+    syncFullHistory: true,
     generateHighQualityLinkPreview: true,
     // ignore all broadcast messages -- to receive the same
     // comment the line below out
