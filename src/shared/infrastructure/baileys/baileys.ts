@@ -4,6 +4,7 @@ import NodeCache from "node-cache";
 import readline from "readline";
 import makeWASocket, {
   AnyMessageContent,
+  Browsers,
   delay,
   DisconnectReason,
   fetchLatestBaileysVersion,
@@ -56,6 +57,8 @@ const startSock = async () => {
       keys: makeCacheableSignalKeyStore(state.keys, logger),
     },
     keepAliveIntervalMs: 60_000,
+    connectTimeoutMs: 30_000,
+    browser: Browsers.macOS('Desktop'),
     msgRetryCounterCache,
     syncFullHistory: true,
     generateHighQualityLinkPreview: true,
