@@ -4,10 +4,10 @@ import sticker from '../useCases/sticker.useCase'
 import stickerToImage from '../useCases/stickerToImage.useCase'
 import stickerToGif from '../useCases/stickerToGif.useCase'
 import getElapsedSeconds from '../useCases/ping.useCase'
-import { Utils } from '../../shared/interfaces/types'
 import help from '../useCases/help.usecase'
 import music from '../useCases/music.useCase'
 import video from '../useCases/video.useCase'
+import chatGPT from '../useCases/chatGPT.useCase'
 
 export class commands {
   private comandos: { [key: string]: Function } = {}
@@ -26,6 +26,7 @@ export class commands {
       music: music,
       video: video,
       yt: video,
+      gpt:chatGPT
     }
   }
 

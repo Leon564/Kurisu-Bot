@@ -33,6 +33,7 @@ export type MessageBody = {
   command?: string
   outCommandMessage: string | undefined
   timestamp: number | Long | Nullable
+  userNumber: string | undefined
 }
 
 export type SendData = {
