@@ -1,7 +1,6 @@
 import { OpenAIApi, Configuration } from "openai";
 import { MessageData, SendData } from "../../shared/interfaces/types";
 import config from "../../shared/infrastructure/configs/app.config";
-import fs from "fs";
 import { getOpenaiWhiteList } from "../services/firebase.service";
 
 const chatGPT = async (data: MessageData): Promise<SendData> => {

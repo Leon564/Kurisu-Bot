@@ -1,10 +1,4 @@
 import admin from "firebase-admin";
-import config from "../../shared/infrastructure/configs/firebase.config";
-
-admin.initializeApp({
-  credential: admin.credential.cert(config),
-  databaseURL: config.dataBaseUrl,
-});
 
 const db = admin.database();
 
