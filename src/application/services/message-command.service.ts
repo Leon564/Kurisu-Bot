@@ -73,6 +73,7 @@ export class MessageCommandService {
   private help(payload: RequestMessage): ResponseMessage {
     const { conversationId } = payload;
     const commands = [
+      '*!hola*: _Recibe un saludo, o no..._',
       '*!ping*: _Envia una respuesta del servidor._',
       '*!help*: _Muestra el menu de commandos._',
       '*!sticker*: _Convierte cualquier imagen, gif, video en sticker._',
