@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Command_Name } from 'src/domain/enums/command-name.enum';
+import { CommandName } from 'src/domain/enums/command-name.enum';
 import { MessageResponseType } from 'src/domain/enums/message-response-type.enum';
 import { MessageType } from 'src/domain/enums/message-type.enum';
 import { RequestMessage } from 'src/domain/types/request-message.type';
@@ -24,39 +24,34 @@ export class MessageCommandService {
 
     if (payload?.fromMe) return undefined;
 
-    if (this.testPattern(Command_Name.PING, text)) {
+    if (this.testPattern(CommandName.PING, text)) {
       return this.ping(payload);
     }
 
-    if (this.testPattern(Command_Name.HELP, text)) {
+    if (this.testPattern(CommandName.HELP, text)) {
       return this.help(payload);
     }
 
-    if (this.testPattern(Command_Name.STICKER, text)) {
+    if (this.testPattern(CommandName.STICKER, text)) {
       return this.sticker(payload);
     }
 
-    if (this.testPattern(Command_Name.INSULT, text)) {
+    if (this.testPattern(CommandName.INSULT, text)) {
       return this.insult(payload);
     }
 
-    if (this.testPattern(Command_Name.CHAT, text)) {
+    if (this.testPattern(CommandName.GPT, text)) {
       return this.chat(payload);
     }
 
-    if (this.testPattern(Command_Name.PHRASE, text)) {
+    if (this.testPattern(CommandName.PHRASE, text)) {
       return this.phrase(payload);
     }
     return undefined;
   }
 
-  private escapeRegExp(pattern: string): string {
-    return pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
   private testPattern(pattern: string, text: string): boolean {
-    const escapedPattern = this.escapeRegExp(pattern);
-    const validator = new RegExp(escapedPattern, 'gi');
+    const validator = new RegExp(`${pattern}\\b`, 'gi');
     return validator.test(text);
   }
 
@@ -138,7 +133,7 @@ export class MessageCommandService {
     const whitelist: string[] = await this.firebaseService.getWhiteList();
     const [conversationNumber] = payload?.conversationId?.split('@');
     const [userNumber] = payload?.userId?.split('@');
-    const prompt = text?.replace(Command_Name.CHAT, '').trim();
+    const prompt = text?.replace(CommandName.GPT, '').trim();
     const isConversationNumber = whitelist?.includes(conversationNumber);
     const isUserNumber = whitelist?.includes(userNumber);
     if (isConversationNumber || isUserNumber) {
