@@ -22,13 +22,12 @@ export class SendMessageMapper {
     const { messages } = data;
     const [message] = messages;
 
-    let userNumber = '';
     const [userId] = message.key.remoteJid.split('@');
+    let userNumber = userId;
     if (isJidGroup(message.key.remoteJid)) {
       const [participant] = message.key.participant.split('@');
       userNumber = participant;
     }
-    userNumber = userId;
 
     return {
       id: message?.key?.id || '',
