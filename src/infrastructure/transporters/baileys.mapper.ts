@@ -2,6 +2,7 @@ import {
   AnyMessageContent,
   DownloadableMessage,
   downloadContentFromMessage,
+  isJidGroup,
   proto,
   WAMessage,
 } from '@adiwajshing/baileys';
@@ -20,10 +21,20 @@ export class SendMessageMapper {
   static async toDomain(data: BaileysMessage): Promise<RequestMessage> {
     const { messages } = data;
     const [message] = messages;
+
+    let userNumber = '';
+    const [userId] = message.key.remoteJid.split('@');
+    if (isJidGroup(message.key.remoteJid)) {
+      const [participant] = message.key.participant.split('@');
+      userNumber = participant;
+    }
+    userNumber = userId;
+
     return {
       id: message?.key?.id || '',
       conversationId: message?.key?.remoteJid || '',
-      userId: message?.key?.participant || '',
+      userId: message?.key?.participant || message?.key?.remoteJid || '',
+      userNumber,
       fromMe: message?.key?.fromMe || false,
       userName: message?.pushName || 'user',
       message: await Message.create(message),

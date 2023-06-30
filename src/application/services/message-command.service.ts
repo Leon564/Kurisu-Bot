@@ -47,6 +47,10 @@ export class MessageCommandService {
     if (this.testPattern(CommandName.PHRASE, text)) {
       return this.phrase(payload);
     }
+
+    if (this.testPattern(CommandName.GREETING, text)) {
+      return this.greeting(payload);
+    }
     return undefined;
   }
 
@@ -131,12 +135,10 @@ export class MessageCommandService {
     const { conversationId, message } = payload;
     const text = message?.text || '';
     const whitelist: string[] = await this.firebaseService.getWhiteList();
-    const [conversationNumber] = payload?.conversationId?.split('@');
-    const [userNumber] = payload?.userId?.split('@');
-    const prompt = text?.replace(CommandName.GPT, '').trim();
-    const isConversationNumber = whitelist?.includes(conversationNumber);
-    const isUserNumber = whitelist?.includes(userNumber);
-    if (isConversationNumber || isUserNumber) {
+    const prompt = text?.replace(/^[^\s]+/, '').trim();
+    const isConversationNumber = whitelist?.includes(payload.userNumber);
+
+    if (isConversationNumber) {
       const response = await this.chatService.send(prompt);
       return {
         content: {
@@ -146,6 +148,24 @@ export class MessageCommandService {
         },
       };
     }
-    return undefined;
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.text,
+        text: 'No tienes acceso a este comando',
+      },
+      options: { quoted: true },
+    };
+  }
+
+  private async greeting(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId } = payload;
+    const phrases = await this.firebaseService.getGreetings();
+    const index = random({ min: 0, max: phrases.length - 1, integer: true });
+    const text = phrases[index];
+    if (!text) return undefined;
+    return {
+      content: { conversationId, type: MessageResponseType.text, text },
+    };
   }
 }
