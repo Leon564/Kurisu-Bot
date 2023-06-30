@@ -13,7 +13,7 @@ export class FirebaseService {
 
   init() {
     this.database = admin.database();
-    this.insultsRef = this.database.ref('phrases');
+    this.insultsRef = this.database.ref('insults');
     this.whitelistRef = this.database.ref('openai-whitelist');
     this.phraseRef = this.database.ref('phrases');
     this.greetingsRef = this.database.ref('greetings');

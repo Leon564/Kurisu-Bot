@@ -103,13 +103,20 @@ export class MessageCommandService {
   }
 
   private async insult(payload: RequestMessage): Promise<ResponseMessage> {
-    const { conversationId } = payload;
-    const phrases = await this.firebaseService.getPhrases();
-    const index = random({ min: 0, max: phrases.length - 1, integer: true });
-    const text = phrases[index];
+    const { conversationId, message } = payload;
+    const insults = await this.firebaseService.getInsults();
+    const index = random({ min: 0, max: insults.length - 1, integer: true });
+    const { mentions } = message;
+    const people = mentions?.map((item) => '@' + item?.split('@')[0]);
+    const text = `${people.join(' ')} ${insults[index]}`.trim();
     if (!text) return undefined;
     return {
-      content: { conversationId, type: MessageResponseType.text, text },
+      content: {
+        conversationId,
+        type: MessageResponseType.text,
+        text,
+        mentions,
+      },
     };
   }
   private async phrase(payload: RequestMessage): Promise<ResponseMessage> {
