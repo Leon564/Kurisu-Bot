@@ -1,5 +1,5 @@
 {
-  "name": "whatsapp-bot-nestjs",
+  "name": "kurisu-bot-nestjs",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -39,9 +39,9 @@
     "random-number": "^0.0.9",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "sharp": "^0.31.3",
     "streamifier": "^0.1.1",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "ws-sticker-maker": "Leon564/ws-sticker-maker#main"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

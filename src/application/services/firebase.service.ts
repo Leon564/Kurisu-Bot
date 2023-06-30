@@ -7,12 +7,14 @@ export class FirebaseService {
   private database: Database;
   private insultsRef: Reference;
   private whitelistRef: Reference;
+  private phraseRef: Reference;
   private welcomeMessagesRef: Reference;
 
   init() {
     this.database = admin.database();
-    this.insultsRef = this.database.ref('insults');
+    this.insultsRef = this.database.ref('phrases');
     this.whitelistRef = this.database.ref('whitelist');
+    this.phraseRef = this.database.ref('phrases');
     this.welcomeMessagesRef = this.database.ref('welcomeMessages');
   }
 
@@ -33,7 +35,26 @@ export class FirebaseService {
   getInsults(): Promise<any[]> {
     this.init();
     return this.insultsRef.once('value').then((snapshot) => {
-      return snapshot.val();
+      const insults = snapshot.val();
+      if (insults) {
+        const whitelistArray = Object.values(insults);
+        return whitelistArray;
+      } else {
+        return [];
+      }
+    });
+  }
+
+  getPhrases(): Promise<any[]> {
+    this.init();
+    return this.phraseRef.once('value').then((snapshot) => {
+      const phrase = snapshot.val();
+      if (phrase) {
+        const whitelistArray = Object.values(phrase);
+        return whitelistArray;
+      } else {
+        return [];
+      }
     });
   }
 }

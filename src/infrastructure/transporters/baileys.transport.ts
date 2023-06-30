@@ -1,6 +1,7 @@
 import WhatsAppSocket, {
   AuthenticationState,
   DisconnectReason,
+  proto,
 } from '@adiwajshing/baileys';
 import {
   Server,
@@ -8,7 +9,11 @@ import {
   BaseRpcContext,
 } from '@nestjs/microservices';
 import { RequestMessage } from 'src/domain/types/request-message.type';
-import { ResponseMessage } from 'src/domain/types/response-message.type';
+import {
+  ResponseMessage,
+  ResponseMessageContent,
+  ResponseMessageOptions,
+} from 'src/domain/types/response-message.type';
 import { SendMessageMapper } from './baileys.mapper';
 import { Logger } from '@nestjs/common';
 
@@ -53,28 +58,33 @@ export class BaileysTransport
       }
     });
 
-    socket.ev.on('group-participants.update', async (data) => {
-      console.log('group-participants.update', data);
-      try {
-        const message = { ...data, conversationId: data?.id };
-        const pattern = 'group-participants';
-        const handler = parent.messageHandlers.get(pattern);
-        const ctx = new BaseRpcContext(<any>{});
-        if (handler) {
-          const payload = { pattern, data: message, options: {} };
-          const result: ResponseMessage[] = await handler(payload, ctx);
-          if (result && result?.length)
-            result.forEach((msg) => this.sendMessage(socket, msg));
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    });
+    // socket.ev.on('group-participants.update', async (data) => {
+    //   console.log('group-participants.update', data);
+    //   try {
+    //     const message = { ...data, conversationId: data?.id };
+    //     const pattern = 'group-participants';
+    //     const handler = parent.messageHandlers.get(pattern);
+    //     const ctx = new BaseRpcContext(<any>{});
+    //     if (handler) {
+    //       const payload = { pattern, data: message, options: {} };
+    //       const result: ResponseMessageContent[] = await handler(payload, ctx);
+    //       if (result && result?.length) {
+    //         const responseMessages: ResponseMessage[] = result.map((msg) => {
+    //           return { content: msg };
+    //         });
+    //         responseMessages.forEach((msg) => this.sendMessage(socket, msg.content));
+    //       }
+    //     }
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // });
 
     socket.ev.on('messages.upsert', async (data) => {
       try {
         // const MY_CONVERSATION = 'xxxxxxxxxxxxxxxxxx@g.us';
         const message = await SendMessageMapper.toDomain(data);
+
         // if (MY_CONVERSATION === message.conversationId) {
         if (!message?.fromMe) {
           this.logMessage(message);
@@ -83,10 +93,15 @@ export class BaileysTransport
           const ctx = new BaseRpcContext(<any>{});
           if (handler) {
             const payload = { pattern, data: message, options: {} };
-            const result: ResponseMessage = await handler(payload, ctx);
-            result && this.sendMessage(socket, result);
+            const resutl: ResponseMessage = await handler(payload, ctx);
+            resutl?.content &&
+              this.sendMessage({
+                socket,
+                body: resutl.content,
+                options: resutl.options,
+                message: data.messages[0],
+              });
           }
-          // }
         }
       } catch (err) {
         console.log(err);
@@ -98,9 +113,32 @@ export class BaileysTransport
     console.log('baileys closed');
   }
 
-  private sendMessage(socket: any, body: ResponseMessage): void {
-    const payload = SendMessageMapper.toSocket(body);
-    socket.sendMessage(body.conversationId, payload);
+  private async sendMessage(m: {
+    socket: any;
+    body: ResponseMessageContent;
+    options?: ResponseMessageOptions;
+    message?: proto.IWebMessageInfo;
+  }): Promise<void> {
+    const payload = SendMessageMapper.toSocket(m.body);
+    const quoted = this.setQuoted(m.options, m.message);
+    await m.socket.sendMessage(m.body.conversationId, payload, quoted);
+    if (m.options?.reaction)
+      await m.socket.sendMessage(m.body.conversationId, {
+        react: { text: m.options.reaction, key: m.message.key },
+      });
+  }
+
+  private setQuoted(options, message): any {
+    return options?.quoted
+      ? { quoted: message }
+      : options?.fakeQuoted
+      ? {
+          quoted: {
+            key: { participant: '0@s.whatsapp.net' },
+            message: { conversation: 'xd' },
+          },
+        }
+      : undefined;
   }
 
   private logMessage(message: RequestMessage): void {

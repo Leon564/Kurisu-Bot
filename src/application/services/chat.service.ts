@@ -21,9 +21,13 @@ export class ChatService {
         n: 1,
         model: 'gpt-3.5-turbo',
         messages: [
-          { role: 'system', content: 'soy un bot, me llamo ARCHIE' },
-          { role: 'system', content: 'solo dare respuestas muycortas' },
-          { role: 'system', content: 'me expreso como mexicano' },
+          { role: 'system', content: 'soy un bot, me llamo Kurisu' },
+          { role: 'system', content: 'solo dare respuestas muy cortas' },
+          {
+            role: 'system',
+            content:
+              'mi personalidad esta basada en Makise Kurisu del anime steins;gate',
+          },
           { role: 'user', content: text || '' },
         ],
       });

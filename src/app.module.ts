@@ -8,6 +8,7 @@ import { MediaService } from './application/services/media.service';
 import { appConfig } from './configs/app.config';
 import { firebaseConfig } from './configs/firebase.config';
 import { GroupParticipantsCommandService } from './application/services/group-participants-command.service';
+import { StickerService } from './application/services/sticker.service';
 
 @Module({
   controllers: [AppController],
@@ -18,6 +19,7 @@ import { GroupParticipantsCommandService } from './application/services/group-pa
     FirebaseService,
     ChatService,
     MediaService,
+    StickerService,
   ],
 })
 export class AppModule {}

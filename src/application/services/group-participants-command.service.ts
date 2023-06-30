@@ -32,7 +32,7 @@ export class GroupParticipantsCommandService {
       const footer = `Cumple o te sacamos 🙂`;
       const text = `${header}\n\n${rule}\n\n${footer}`;
       const type = MessageResponseType.text;
-      return { type, text, conversationId, mentions: [item?.id] };
+      return { content: { type, text, conversationId, mentions: [item?.id] } };
     });
   }
 }

@@ -11,7 +11,7 @@ import {
   RequestMessage,
 } from 'src/domain/types/request-message.type';
 import { MessageType } from 'src/domain/enums/message-type.enum';
-import { ResponseMessage } from 'src/domain/types/response-message.type';
+import { ResponseMessageContent } from 'src/domain/types/response-message.type';
 
 type Nullable = undefined | null;
 export type BaileysMessage = { messages: WAMessage[]; type: any };
@@ -30,7 +30,7 @@ export class SendMessageMapper {
     };
   }
 
-  static toSocket(data: ResponseMessage): AnyMessageContent {
+  static toSocket(data: ResponseMessageContent): AnyMessageContent {
     switch (data.type) {
       case 'text':
         return { text: data.text || '', mentions: data?.mentions };
