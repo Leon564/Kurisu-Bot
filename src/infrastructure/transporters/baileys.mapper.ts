@@ -5,7 +5,7 @@ import {
   isJidGroup,
   proto,
   WAMessage,
-} from '@adiwajshing/baileys';
+} from '@whiskeysockets/baileys';
 
 import {
   MessageBody,

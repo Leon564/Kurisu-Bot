@@ -1,8 +1,11 @@
 import WhatsAppSocket, {
   AuthenticationState,
   DisconnectReason,
+  WAMessageContent,
+  WAMessageKey,
+  makeInMemoryStore,
   proto,
-} from '@adiwajshing/baileys';
+} from '@whiskeysockets/baileys';
 import {
   Server,
   CustomTransportStrategy,
@@ -16,6 +19,7 @@ import {
 } from 'src/domain/types/response-message.type';
 import { SendMessageMapper } from './baileys.mapper';
 import { Logger } from '@nestjs/common';
+import * as NodeCache from 'node-cache';
 
 type Options = {
   state: AuthenticationState;
@@ -33,6 +37,13 @@ export class BaileysTransport
   listen() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const parent = this;
+
+    this.store?.readFromFile('./baileys_store_multi.json');
+    // save every 10s
+    setInterval(() => {
+      this.store?.writeToFile('./baileys_store_multi.json');
+    }, 10_000);
+
     console.log('baileys started');
 
     const socket = WhatsAppSocket({
@@ -40,6 +51,8 @@ export class BaileysTransport
       printQRInTerminal: true,
       syncFullHistory: false,
       version: [2, 2311, 77],
+      msgRetryCounterCache: new NodeCache(),
+      getMessage: this.getMessage,
     });
 
     socket.ev.on('creds.update', this.options.saveCreds);
@@ -147,4 +160,20 @@ export class BaileysTransport
     const raw = JSON.stringify({ conversationId, type, text });
     Logger.log(raw);
   }
+
+  private async getMessage(
+    key: WAMessageKey,
+  ): Promise<WAMessageContent | undefined> {
+    if (this.store) {
+      const msg = await this.store.loadMessage(key.remoteJid, key.id);
+      return msg?.message || undefined;
+    }
+
+    // only if store is present
+    return proto.Message.fromObject({});
+  }
+
+  private store = !process.argv.includes('--no-store')
+    ? makeInMemoryStore({})
+    : undefined;
 }
