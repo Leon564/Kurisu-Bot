@@ -9,4 +9,5 @@ export const CommandName = {
   INSULT: `${prefix}insult`,
   PHRASE: `${prefix}frase`,
   GREETING: `${prefix}hola`,
+  STICKERBG: `${prefix}stickerbg|${prefix}stikerbg`,
 };

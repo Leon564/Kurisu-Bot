@@ -6,17 +6,17 @@ import { RequestMessage } from 'src/domain/types/request-message.type';
 import { ResponseMessage } from 'src/domain/types/response-message.type';
 import { ChatService } from './chat.service';
 import { FirebaseService } from './firebase.service';
-import { MediaService } from './media.service';
 import * as random from 'random-number';
 import { StickerService } from './sticker.service';
+import { RemoveBgService } from './remove-bg.service';
 
 @Injectable()
 export class MessageCommandService {
   constructor(
     private firebaseService: FirebaseService,
     private chatService: ChatService,
-    private mediaService: MediaService,
     private stickerService: StickerService,
+    private removeBgService: RemoveBgService,
   ) {}
 
   async handle(payload: RequestMessage): Promise<any> {
@@ -30,6 +30,10 @@ export class MessageCommandService {
 
     if (this.testPattern(CommandName.HELP, text)) {
       return this.help(payload);
+    }
+
+    if (this.testPattern(CommandName.STICKERBG, text)) {
+      return this.stickerbg(payload);
     }
 
     if (this.testPattern(CommandName.STICKER, text)) {
@@ -51,6 +55,7 @@ export class MessageCommandService {
     if (this.testPattern(CommandName.GREETING, text)) {
       return this.greeting(payload);
     }
+
     return undefined;
   }
 
@@ -77,6 +82,7 @@ export class MessageCommandService {
       '*!ping*: _Envia una respuesta del servidor._',
       '*!help*: _Muestra el menu de commandos._',
       '*!sticker*: _Convierte cualquier imagen, gif, video en sticker._',
+      '*!stickerbg*: _Convierte cualquier imagen en sticker con fondo transparente._',
       '*!chat*: _Puedes conversar con chatgpt, (necesitas pedir acceso)(beta)._',
       '*!insult*: _Envia un instulto a la persona que mencionas._',
       '*!frase*: _Envia una frase de algun anime._',
@@ -103,6 +109,23 @@ export class MessageCommandService {
     return undefined;
   }
 
+  private async stickerbg(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    if (!payload.message.media) return undefined;
+    if (payload.message.type === MessageType.image) {
+      const media = await this.removeBgService.removeBg(message.media);
+      const sticker = await this.stickerService.sticker(media);
+      return {
+        content: {
+          conversationId,
+          type: MessageResponseType.sticker,
+          media: sticker,
+        },
+      };
+    }
+    return undefined;
+  }
+
   private async insult(payload: RequestMessage): Promise<ResponseMessage> {
     const { conversationId, message } = payload;
     const insults = await this.firebaseService.getInsults();
@@ -121,19 +144,16 @@ export class MessageCommandService {
     };
   }
   private async phrase(payload: RequestMessage): Promise<ResponseMessage> {
-    const { conversationId, message } = payload;
-    const { mentions } = message;
-    const people = mentions?.map((item) => '@' + item?.split('@')[0]);
-    const insults = await this.firebaseService.getInsults();
-    const index = random({ min: 0, max: insults.length - 1, integer: true });
-    const text = `${insults[index]} ${people.join(' ')}`;
+    const { conversationId } = payload;
+    const phrases = await this.firebaseService.getPhrases();
+    const index = random({ min: 0, max: phrases.length - 1, integer: true });
+    const text = phrases[index];
     if (!text) return undefined;
     return {
       content: {
         conversationId,
         type: MessageResponseType.text,
         text,
-        mentions,
       },
       options: { quoted: true },
     };

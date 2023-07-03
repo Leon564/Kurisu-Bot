@@ -5,4 +5,5 @@ export const appConfig = registerAs('app', () => ({
   authInfoDir: process.env.AUTH_INFO_DIR || './auth_info',
   openAiApiKey: process.env.OPENAI_API_KEY,
   prefix: process.env.PREFIX || '#',
+  removeBgApiKey: process.env.REMOVE_BG_API_KEY,
 }));
