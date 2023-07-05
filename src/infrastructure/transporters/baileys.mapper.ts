@@ -2,6 +2,7 @@ import {
   AnyMessageContent,
   DownloadableMessage,
   downloadContentFromMessage,
+  getDevice,
   isJidGroup,
   proto,
   WAMessage,
@@ -13,6 +14,7 @@ import {
 } from 'src/domain/types/request-message.type';
 import { MessageType } from 'src/domain/enums/message-type.enum';
 import { ResponseMessageContent } from 'src/domain/types/response-message.type';
+import { Stream } from 'stream';
 
 type Nullable = undefined | null;
 export type BaileysMessage = { messages: WAMessage[]; type: any };
@@ -34,6 +36,7 @@ export class SendMessageMapper {
       conversationId: message?.key?.remoteJid || '',
       userId: message?.key?.participant || message?.key?.remoteJid || '',
       userNumber,
+      device: getDevice(message?.key?.remoteJid || ''),
       fromMe: message?.key?.fromMe || false,
       userName: message?.pushName || 'user',
       message: await Message.create(message),
@@ -41,11 +44,28 @@ export class SendMessageMapper {
   }
 
   static toSocket(data: ResponseMessageContent): AnyMessageContent {
+    let media: any = data.media ? { url: data.media } : {};
+    if (data.media && Buffer.isBuffer(data.media)) {
+      media = data.media;
+    } else if (data.media && data.media instanceof Stream) {
+      media = { stream: data.media };
+    }
     switch (data.type) {
       case 'text':
         return { text: data.text || '', mentions: data?.mentions };
       case 'sticker':
-        return { sticker: data.media || Buffer.from([]) };
+        return { sticker: media || Buffer.from([]) };
+      case 'audio':
+        return {
+          audio: media || Buffer.from([]),
+          mimetype: data?.mimetype || 'audio/mp4',
+          ptt: data?.ptt || false,
+        };
+      case 'video':
+        return {
+          video: media || Buffer.from([]),
+          caption: data?.text || '',
+        };
     }
   }
 }

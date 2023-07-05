@@ -1,3 +1,4 @@
+import { Stream } from 'stream';
 import { MessageResponseType } from '../enums/message-response-type.enum';
 
 export type ResponseMessageContent = {
@@ -5,7 +6,9 @@ export type ResponseMessageContent = {
   conversationId: string;
   userId?: string;
   text?: string;
-  media?: Buffer;
+  media?: Buffer | Stream;
+  mimetype?: string;
+  ptt?: boolean;
   mentions?: string[];
 };
 

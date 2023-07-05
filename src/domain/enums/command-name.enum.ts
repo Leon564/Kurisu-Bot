@@ -10,4 +10,6 @@ export const CommandName = {
   PHRASE: `${prefix}frase`,
   GREETING: `${prefix}hola`,
   STICKERBG: `${prefix}stickerbg|${prefix}stikerbg`,
+  MUSIC: `${prefix}music`,
+  VIDEO: `${prefix}video |${prefix}yt`,
 };

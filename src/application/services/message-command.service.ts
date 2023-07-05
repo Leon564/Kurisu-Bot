@@ -9,6 +9,7 @@ import { FirebaseService } from './firebase.service';
 import * as random from 'random-number';
 import { StickerService } from './sticker.service';
 import { RemoveBgService } from './remove-bg.service';
+import { YoutubeService } from './youtube.service';
 
 @Injectable()
 export class MessageCommandService {
@@ -17,6 +18,7 @@ export class MessageCommandService {
     private chatService: ChatService,
     private stickerService: StickerService,
     private removeBgService: RemoveBgService,
+    private youtubeService: YoutubeService,
   ) {}
 
   async handle(payload: RequestMessage): Promise<any> {
@@ -54,6 +56,14 @@ export class MessageCommandService {
 
     if (this.testPattern(CommandName.GREETING, text)) {
       return this.greeting(payload);
+    }
+
+    if (this.testPattern(CommandName.MUSIC, text)) {
+      return this.music(payload);
+    }
+
+    if (this.testPattern(CommandName.VIDEO, text)) {
+      return this.video(payload);
     }
 
     return undefined;
@@ -194,6 +204,45 @@ export class MessageCommandService {
     if (!text) return undefined;
     return {
       content: { conversationId, type: MessageResponseType.text, text },
+    };
+  }
+
+  private async music(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    const text = message?.text;
+    if (!text) return undefined;
+    const prompt = text?.replace(/^[^\s]+/, '').trim();
+    const response = await this.youtubeService.music(prompt);
+    const mimetype = payload.device === 'android' ? 'audio/mp4' : 'audio/mpeg';
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.audio,
+        media: response.file as Buffer,
+        mimetype,
+      },
+      options: {
+        quoted: true,
+      },
+    };
+  }
+
+  private async video(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    const text = message?.text;
+    if (!text) return undefined;
+    const prompt = text?.replace(/^[^\s]+/, '').trim();
+    const response = await this.youtubeService.video(prompt);
+    console.log(response);
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.video,
+        media: response,
+      },
+      options: {
+        quoted: true,
+      },
     };
   }
 }

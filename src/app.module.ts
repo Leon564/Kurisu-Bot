@@ -9,6 +9,7 @@ import { firebaseConfig } from './configs/firebase.config';
 import { GroupParticipantsCommandService } from './application/services/group-participants-command.service';
 import { StickerService } from './application/services/sticker.service';
 import { RemoveBgService } from './application/services/remove-bg.service';
+import { YoutubeService } from './application/services/youtube.service';
 
 @Module({
   controllers: [AppController],
@@ -20,6 +21,7 @@ import { RemoveBgService } from './application/services/remove-bg.service';
     ChatService,
     StickerService,
     RemoveBgService,
+    YoutubeService,
   ],
 })
 export class AppModule {}

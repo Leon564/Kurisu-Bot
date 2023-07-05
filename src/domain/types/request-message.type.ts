@@ -5,6 +5,7 @@ export type RequestMessage = {
   userId?: string;
   userNumber: string;
   userName: string;
+  device: string;
   fromMe: boolean;
   conversationId: string;
   message: MessageBody;
