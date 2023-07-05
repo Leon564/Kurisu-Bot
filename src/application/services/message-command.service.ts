@@ -96,6 +96,8 @@ export class MessageCommandService {
       '*!chat*: _Puedes conversar con chatgpt, (necesitas pedir acceso)(beta)._',
       '*!insult*: _Envia un instulto a la persona que mencionas._',
       '*!frase*: _Envia una frase de algun anime._',
+      '*!music*: _Busca y recibe una cancion de youtube._',
+      '*!video*: _Busca y recibe un video de youtube._',
     ].join(`\n`);
     const text = `⌘⌘⌘⌘⌘ *MENU* ⌘⌘⌘⌘⌘\n\n${commands}\n\n⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘`;
     return {
