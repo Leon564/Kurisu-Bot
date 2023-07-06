@@ -165,7 +165,6 @@ class Message implements MessageBody {
       if (!validTypes.includes(this.type)) return;
 
       const type = `${this.type}Message`;
-      console.log({ type });
       // set media message origin
       let message = <DownloadableMessage>this.message?.[type];
       if (this.isReply) {

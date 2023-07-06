@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import Sticker from 'ws-sticker-maker';
 import { Buffer } from 'buffer';
 import EzGif, { Formats } from 'ez-converter';
@@ -13,7 +13,7 @@ export class StickerService {
     try {
       return await new EzGif(media).setTargetFormat(Formats.MP4).toBuffer();
     } catch (e) {
-      console.log(e);
+      Logger.error(e);
       return null;
     }
   }

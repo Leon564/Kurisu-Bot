@@ -10,6 +10,7 @@ import * as random from 'random-number';
 import { StickerService } from './sticker.service';
 import { RemoveBgService } from './remove-bg.service';
 import { YoutubeService } from './youtube.service';
+import { MenuService } from './menu.service';
 
 @Injectable()
 export class MessageCommandService {
@@ -19,6 +20,7 @@ export class MessageCommandService {
     private stickerService: StickerService,
     private removeBgService: RemoveBgService,
     private youtubeService: YoutubeService,
+    private menuService: MenuService,
   ) {}
 
   async handle(payload: RequestMessage): Promise<any> {
@@ -95,21 +97,7 @@ export class MessageCommandService {
 
   private help(payload: RequestMessage): ResponseMessage {
     const { conversationId } = payload;
-    const commands = [
-      '*!hola*: _Recibe un saludo, o no..._',
-      '*!ping*: _Envia una respuesta del servidor._',
-      '*!help*: _Muestra el menu de commandos._',
-      '*!sticker*: _Convierte cualquier imagen, gif, video en sticker._',
-      '*!stickerbg*: _Convierte cualquier imagen en sticker con fondo transparente._',
-      '*!gif*: _Convierte cualquier sticker en gif._',
-      '*!image*: _Convierte cualquier sticker en imagen._',
-      '*!chat*: _Puedes conversar con chatgpt, (necesitas pedir acceso)(beta)._',
-      '*!insult*: _Envia un instulto a la persona que mencionas._',
-      '*!frase*: _Envia una frase de algun anime._',
-      '*!music*: _Busca y recibe una cancion de youtube._',
-      '*!video*: _Busca y recibe un video de youtube._',
-    ].join(`\n`);
-    const text = `⌘⌘⌘⌘⌘ *MENU* ⌘⌘⌘⌘⌘\n\n${commands}\n\n⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘`;
+    const text = this.menuService.getMenu();
     return {
       content: { conversationId, type: MessageResponseType.text, text },
       options: { quoted: true, reaction: '🤖' },

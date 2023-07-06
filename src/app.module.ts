@@ -10,6 +10,7 @@ import { GroupParticipantsCommandService } from './application/services/group-pa
 import { StickerService } from './application/services/sticker.service';
 import { RemoveBgService } from './application/services/remove-bg.service';
 import { YoutubeService } from './application/services/youtube.service';
+import { MenuService } from './application/services/menu.service';
 
 @Module({
   controllers: [AppController],
@@ -22,6 +23,7 @@ import { YoutubeService } from './application/services/youtube.service';
     StickerService,
     RemoveBgService,
     YoutubeService,
+    MenuService,
   ],
 })
 export class AppModule {}
