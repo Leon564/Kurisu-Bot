@@ -44,14 +44,22 @@ export class SendMessageMapper {
   }
 
   static toSocket(data: ResponseMessageContent): AnyMessageContent {
-    let media: any = data.media ? { url: data.media } : {};
-    if (data.media && Buffer.isBuffer(data.media)) {
-      media = data.media;
-    } else if (data.media && data.media instanceof Stream) {
-      media = { stream: data.media };
-    } else if (data.media && typeof data.media === 'string') {
-      media = { url: data.media };
+    let media: any = {};
+
+    if (data.media) {
+      if (Buffer.isBuffer(data.media)) {
+        media = data.media;
+      } else if (data.media instanceof Stream) {
+        media = { stream: data.media };
+      } else if (typeof data.media === 'string') {
+        media = { url: data.media };
+      }
     }
+
+    const commonContent = {
+      caption: data?.text || '',
+    };
+
     switch (data.type) {
       case 'text':
         return { text: data.text || '', mentions: data?.mentions };
@@ -62,22 +70,23 @@ export class SendMessageMapper {
           audio: media || Buffer.from([]),
           mimetype: data?.mimetype || 'audio/mp4',
           ptt: data?.ptt || false,
+          ...commonContent,
         };
       case 'video':
         return {
           video: media || Buffer.from([]),
-          caption: data?.text || '',
+          ...commonContent,
         };
       case 'image':
         return {
           image: media || Buffer.from([]),
-          caption: data?.text || '',
+          ...commonContent,
         };
       case 'gif':
         return {
           video: media || Buffer.from([]),
-          caption: data?.text || '',
           gifPlayback: true,
+          ...commonContent,
         };
     }
   }
