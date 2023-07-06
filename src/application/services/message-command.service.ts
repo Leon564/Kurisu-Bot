@@ -66,6 +66,14 @@ export class MessageCommandService {
       return this.video(payload);
     }
 
+    if (this.testPattern(CommandName.GIF, text)) {
+      return this.gif(payload);
+    }
+
+    if (this.testPattern(CommandName.IMAGE, text)) {
+      return this.image(payload);
+    }
+
     return undefined;
   }
 
@@ -93,6 +101,8 @@ export class MessageCommandService {
       '*!help*: _Muestra el menu de commandos._',
       '*!sticker*: _Convierte cualquier imagen, gif, video en sticker._',
       '*!stickerbg*: _Convierte cualquier imagen en sticker con fondo transparente._',
+      '*!gif*: _Convierte cualquier sticker en gif._',
+      '*!image*: _Convierte cualquier sticker en imagen._',
       '*!chat*: _Puedes conversar con chatgpt, (necesitas pedir acceso)(beta)._',
       '*!insult*: _Envia un instulto a la persona que mencionas._',
       '*!frase*: _Envia una frase de algun anime._',
@@ -240,6 +250,41 @@ export class MessageCommandService {
       content: {
         conversationId,
         type: MessageResponseType.video,
+        media: response,
+      },
+      options: {
+        quoted: true,
+      },
+    };
+  }
+
+  private async gif(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    const media = message?.media;
+    if (!media) return undefined;
+    const response = await this.stickerService.gif(media);
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.gif,
+        media: response,
+      },
+      options: {
+        quoted: true,
+      },
+    };
+  }
+
+  private async image(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    const media = message?.media;
+    if (!media) return undefined;
+    const response = await this.stickerService.image(media);
+    console.log(response);
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.image,
         media: response,
       },
       options: {

@@ -11,5 +11,7 @@ export const CommandName = {
   GREETING: `${prefix}hola`,
   STICKERBG: `${prefix}stickerbg|${prefix}stikerbg`,
   MUSIC: `${prefix}music`,
-  VIDEO: `${prefix}video |${prefix}yt`,
+  VIDEO: `${prefix}video|${prefix}yt`,
+  GIF: `${prefix}gif`,
+  IMAGE: `${prefix}image|${prefix}img`,
 };

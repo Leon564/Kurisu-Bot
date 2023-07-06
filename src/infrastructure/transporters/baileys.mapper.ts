@@ -66,6 +66,17 @@ export class SendMessageMapper {
           video: media || Buffer.from([]),
           caption: data?.text || '',
         };
+      case 'image':
+        return {
+          image: media || Buffer.from([]),
+          caption: data?.text || '',
+        };
+      case 'gif':
+        return {
+          video: media || Buffer.from([]),
+          caption: data?.text || '',
+          gifPlayback: true,
+        };
     }
   }
 }
@@ -120,6 +131,8 @@ class Message implements MessageBody {
         return MessageType.video;
       case 'imageMessage':
         return MessageType.image;
+      case 'stickerMessage':
+        return MessageType.sticker;
       default:
         return MessageType.unkown;
     }
@@ -148,9 +161,11 @@ class Message implements MessageBody {
   private async downloadMedia(): Promise<void> {
     try {
       // validate type
-      const validTypes = ['video', 'image'];
+      const validTypes = ['video', 'image', 'sticker'];
       if (!validTypes.includes(this.type)) return;
-      const type = this.type == 'video' ? 'videoMessage' : 'imageMessage';
+
+      const type = `${this.type}Message`;
+      console.log({ type });
       // set media message origin
       let message = <DownloadableMessage>this.message?.[type];
       if (this.isReply) {
@@ -164,6 +179,7 @@ class Message implements MessageBody {
       for await (const chunk of stream)
         this.media = Buffer.concat([this.media, chunk]);
     } catch (err: unknown) {
+      console.log({ err });
       this.media = undefined;
     }
   }

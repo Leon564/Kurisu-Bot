@@ -4,5 +4,6 @@ export enum MessageType {
   'image' = 'image',
   'video' = 'video',
   'buttonsMessage' = 'buttonsMessage',
+  'sticker' = 'sticker',
   'unkown' = 'unkown',
 }

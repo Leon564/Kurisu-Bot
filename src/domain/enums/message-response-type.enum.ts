@@ -4,4 +4,5 @@ export enum MessageResponseType {
   'image' = 'image',
   'audio' = 'audio',
   'video' = 'video',
+  'gif' = 'gif',
 }
