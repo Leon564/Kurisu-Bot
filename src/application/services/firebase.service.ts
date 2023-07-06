@@ -10,6 +10,7 @@ export class FirebaseService {
   private phraseRef: Reference;
   private greetingsRef: Reference;
   private welcomeMessagesRef: Reference;
+  private dicesRef: Reference;
 
   init() {
     this.database = admin.database();
@@ -17,6 +18,7 @@ export class FirebaseService {
     this.whitelistRef = this.database.ref('openai-whitelist');
     this.phraseRef = this.database.ref('phrases');
     this.greetingsRef = this.database.ref('greetings');
+    this.dicesRef = this.database.ref('dices');
     this.welcomeMessagesRef = this.database.ref('welcomeMessages');
   }
 
@@ -51,6 +53,13 @@ export class FirebaseService {
   getGreetings(): Promise<any[]> {
     this.init();
     return this.greetingsRef.once('value').then((snapshot) => {
+      return snapshot.val();
+    });
+  }
+
+  getDices(): Promise<any[]> {
+    this.init();
+    return this.dicesRef.once('value').then((snapshot) => {
       return snapshot.val();
     });
   }

@@ -14,4 +14,5 @@ export const CommandName = {
   VIDEO: `${prefix}video|${prefix}yt`,
   GIF: `${prefix}gif`,
   IMAGE: `${prefix}image|${prefix}img`,
+  ROLL: `${prefix}roll`,
 };

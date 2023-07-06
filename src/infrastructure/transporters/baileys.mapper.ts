@@ -49,6 +49,8 @@ export class SendMessageMapper {
       media = data.media;
     } else if (data.media && data.media instanceof Stream) {
       media = { stream: data.media };
+    } else if (data.media && typeof data.media === 'string') {
+      media = { url: data.media };
     }
     switch (data.type) {
       case 'text':

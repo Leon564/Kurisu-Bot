@@ -76,6 +76,10 @@ export class MessageCommandService {
       return this.image(payload);
     }
 
+    if (this.testPattern(CommandName.ROLL, text)) {
+      return this.roll(payload);
+    }
+
     return undefined;
   }
 
@@ -268,7 +272,6 @@ export class MessageCommandService {
     const media = message?.media;
     if (!media) return undefined;
     const response = await this.stickerService.image(media);
-    console.log(response);
     return {
       content: {
         conversationId,
@@ -277,6 +280,21 @@ export class MessageCommandService {
       },
       options: {
         quoted: true,
+      },
+    };
+  }
+
+  private async roll(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId } = payload;
+    const dices = await this.firebaseService.getDices();
+    const index = random({ min: 0, max: dices.length - 1, integer: true });
+    const text = dices[index];
+    if (!text) return undefined;
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.sticker,
+        media: text,
       },
     };
   }

@@ -6,7 +6,7 @@ export type ResponseMessageContent = {
   conversationId: string;
   userId?: string;
   text?: string;
-  media?: Buffer | Stream;
+  media?: Buffer | Stream | string;
   mimetype?: string;
   ptt?: boolean;
   mentions?: string[];
