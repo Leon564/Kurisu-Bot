@@ -106,6 +106,7 @@ export class BaileysTransport
           const ctx = new BaseRpcContext(<any>{});
           if (handler) {
             const payload = { pattern, data: message, options: {} };
+            socket.sendPresenceUpdate('composing', message.conversationId);
             const resutl: ResponseMessage = await handler(payload, ctx);
             resutl?.content &&
               this.sendMessage({
@@ -114,6 +115,8 @@ export class BaileysTransport
                 options: resutl.options,
                 message: data.messages[0],
               });
+
+            socket.sendPresenceUpdate('paused', message.conversationId);
           }
         }
       } catch (err) {
