@@ -37,6 +37,7 @@
     "ez-converter": "^3.0.1",
     "firebase-admin": "^11.5.0",
     "fluent-ffmpeg": "^2.1.2",
+    "lyricsverse": "^1.0.2",
     "mediatube": "^1.0.0",
     "openai": "^3.2.1",
     "qrcode-terminal": "^0.12.0",

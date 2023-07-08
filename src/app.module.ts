@@ -11,6 +11,7 @@ import { StickerService } from './application/services/sticker.service';
 import { RemoveBgService } from './application/services/remove-bg.service';
 import { YoutubeService } from './application/services/youtube.service';
 import { MenuService } from './application/services/menu.service';
+import { MiscService } from './application/services/misc.service';
 
 @Module({
   controllers: [AppController],
@@ -24,6 +25,7 @@ import { MenuService } from './application/services/menu.service';
     RemoveBgService,
     YoutubeService,
     MenuService,
+    MiscService,
   ],
 })
 export class AppModule {}

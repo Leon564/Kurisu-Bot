@@ -11,6 +11,7 @@ import { StickerService } from './sticker.service';
 import { RemoveBgService } from './remove-bg.service';
 import { YoutubeService } from './youtube.service';
 import { MenuService } from './menu.service';
+import { MiscService } from './misc.service';
 
 @Injectable()
 export class MessageCommandService {
@@ -21,6 +22,7 @@ export class MessageCommandService {
     private removeBgService: RemoveBgService,
     private youtubeService: YoutubeService,
     private menuService: MenuService,
+    private miscService: MiscService,
   ) {}
 
   async handle(payload: RequestMessage): Promise<any> {
@@ -78,6 +80,10 @@ export class MessageCommandService {
 
     if (this.testPattern(CommandName.ROLL, text)) {
       return this.roll(payload);
+    }
+
+    if (this.testPattern(CommandName.LYRICS, text)) {
+      return this.lyrics(payload);
     }
 
     return undefined;
@@ -237,7 +243,6 @@ export class MessageCommandService {
     if (!text) return undefined;
     const prompt = text?.replace(/^[^\s]+/, '').trim();
     const response = await this.youtubeService.video(prompt);
-    console.log(response);
     return {
       content: {
         conversationId,
@@ -295,6 +300,25 @@ export class MessageCommandService {
         conversationId,
         type: MessageResponseType.sticker,
         media: text,
+      },
+    };
+  }
+
+  private async lyrics(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId, message } = payload;
+    const text = message?.text;
+    if (!text) return undefined;
+    const prompt = text?.replace(/^[^\s]+/, '').trim();
+    const response = await this.miscService.lyric(prompt);
+    const ResponseText = `*${response.title}*\n${response.artist}\n\n${response.lyrics}`;
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.text,
+        text: ResponseText,
+      },
+      options: {
+        quoted: true,
       },
     };
   }
