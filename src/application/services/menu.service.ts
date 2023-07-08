@@ -21,6 +21,7 @@ export class MenuService {
       `*${prefix}chat*: _Puedes conversar con chatgpt, (necesitas pedir acceso)(beta)._`,
       `*${prefix}insult*: _Envia un instulto a la persona que mencionas._`,
       `*${prefix}frase*: _Envia una frase de algun anime._`,
+      `*${prefix}lyrics*: _Busca la letra de una cancion._`,
       `*${prefix}music*: _Busca y recibe una cancion de youtube._`,
       `*${prefix}video*: _Busca y recibe un video de youtube._`,
       `*${prefix}roll*: _Tira un dado de 6 caras._`,
