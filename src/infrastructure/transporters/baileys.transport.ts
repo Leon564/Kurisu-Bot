@@ -3,6 +3,8 @@ import WhatsAppSocket, {
   DisconnectReason,
   WAMessageContent,
   WAMessageKey,
+  WAPresence,
+  WASocket,
   makeInMemoryStore,
   proto,
 } from '@whiskeysockets/baileys';
@@ -105,7 +107,14 @@ export class BaileysTransport
           const handler = parent.messageHandlers.get(pattern);
           const ctx = new BaseRpcContext(<any>{});
           if (handler) {
-            const payload = { pattern, data: message, options: {} };
+            const payload = {
+              pattern,
+              data: message,
+              options: {
+                setPresence: (state: WAPresence) =>
+                  this.setPresence(state, message.conversationId, socket),
+              },
+            };
             const resutl: ResponseMessage = await handler(payload, ctx);
             resutl?.content &&
               this.sendMessage({
@@ -152,6 +161,15 @@ export class BaileysTransport
           },
         }
       : undefined;
+  }
+
+  //change the bot status to "online, typing, paused, offline"
+  private async setPresence(
+    status: WAPresence,
+    chatId: string,
+    socket: WASocket,
+  ) {
+    await socket.sendPresenceUpdate(status, chatId);
   }
 
   private logMessage(message: RequestMessage): void {

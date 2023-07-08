@@ -12,6 +12,7 @@ import { RemoveBgService } from './remove-bg.service';
 import { YoutubeService } from './youtube.service';
 import { MenuService } from './menu.service';
 import { MiscService } from './misc.service';
+import { handleOptions } from 'src/domain/types/handle-options.type';
 
 @Injectable()
 export class MessageCommandService {
@@ -25,64 +26,78 @@ export class MessageCommandService {
     private miscService: MiscService,
   ) {}
 
-  async handle(payload: RequestMessage): Promise<any> {
+  async handle(payload: RequestMessage, options: handleOptions): Promise<any> {
     const text = payload?.message?.text || '';
 
     if (payload?.fromMe) return undefined;
 
     if (this.testPattern(CommandName.PING, text)) {
+      options.setPresence('composing');
       return this.ping(payload);
     }
 
     if (this.testPattern(CommandName.HELP, text)) {
+      options.setPresence('composing');
       return this.help(payload);
     }
 
     if (this.testPattern(CommandName.STICKERBG, text)) {
+      options.setPresence('composing');
       return this.stickerbg(payload);
     }
 
     if (this.testPattern(CommandName.STICKER, text)) {
+      options.setPresence('composing');
       return this.sticker(payload);
     }
 
     if (this.testPattern(CommandName.INSULT, text)) {
+      options.setPresence('composing');
       return this.insult(payload);
     }
 
     if (this.testPattern(CommandName.GPT, text)) {
+      options.setPresence('composing');
       return this.chat(payload);
     }
 
     if (this.testPattern(CommandName.PHRASE, text)) {
+      options.setPresence('composing');
       return this.phrase(payload);
     }
 
     if (this.testPattern(CommandName.GREETING, text)) {
+      options.setPresence('composing');
       return this.greeting(payload);
     }
 
     if (this.testPattern(CommandName.MUSIC, text)) {
+      options.setPresence('recording');
       return this.music(payload);
     }
 
     if (this.testPattern(CommandName.VIDEO, text)) {
+      options.setPresence('composing');
       return this.video(payload);
     }
 
     if (this.testPattern(CommandName.GIF, text)) {
+      options.setPresence('composing');
       return this.gif(payload);
     }
 
     if (this.testPattern(CommandName.IMAGE, text)) {
+      options.setPresence('composing');
       return this.image(payload);
     }
 
     if (this.testPattern(CommandName.ROLL, text)) {
+      options.setPresence('composing');
       return this.roll(payload);
     }
 
     if (this.testPattern(CommandName.LYRICS, text)) {
+      options.setPresence('composing');
       return this.lyrics(payload);
     }
 
