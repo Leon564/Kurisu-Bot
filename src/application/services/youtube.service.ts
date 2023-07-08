@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import MediaTube, { Mp3Response } from 'mediatube';
 import { Stream } from 'stream';
 
@@ -19,7 +19,7 @@ export class YoutubeService {
       }).toMp4();
       return mediaTube.fileStream;
     } catch (err) {
-      console.log(err);
+      Logger.error(err);
     }
   }
   async music(query: string): Promise<Mp3Response> {
