@@ -52,7 +52,7 @@ export class BaileysTransport
       auth: this.options.state,
       printQRInTerminal: true,
       syncFullHistory: false,
-      version: [2, 2311, 77],
+      //version: [2, 2311, 77],
       msgRetryCounterCache: new NodeCache(),
       getMessage: this.getMessage,
     });
