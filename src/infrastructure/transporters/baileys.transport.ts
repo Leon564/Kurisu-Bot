@@ -52,7 +52,7 @@ export class BaileysTransport
       auth: this.options.state,
       printQRInTerminal: true,
       syncFullHistory: false,
-      //version: [2, 2311, 77],
+      version: [2, 2329, 9],
       msgRetryCounterCache: new NodeCache(),
       getMessage: this.getMessage,
     });
@@ -143,7 +143,10 @@ export class BaileysTransport
   }): Promise<void> {
     const payload = SendMessageMapper.toSocket(m.body);
     const quoted = this.setQuoted(m.options, m.message);
-    await m.socket.sendMessage(m.body.conversationId, payload, quoted);
+    await m.socket.sendMessage(m.body.conversationId, payload, {
+      quoted,
+      backgroundColor: '#fff',
+    });
     if (m.options?.reaction)
       await m.socket.sendMessage(m.body.conversationId, {
         react: { text: m.options.reaction, key: m.message.key },
