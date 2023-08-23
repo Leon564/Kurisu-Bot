@@ -114,7 +114,13 @@ class Message implements MessageBody {
   }
 
   private getType(message: proto.IMessage | Nullable): MessageType {
-    const [type] = Object.keys(message || {});
+    let type = Object.keys(message || {})[0];
+
+    if (type === 'senderKeyDistributionMessage') {
+      const keys = Object.keys(message || {});
+      type = keys[keys.length - 1];
+    }
+
     switch (type) {
       case 'conversation':
         return MessageType.text;
