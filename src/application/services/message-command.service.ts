@@ -143,7 +143,7 @@ export class MessageCommandService {
         .filter((part) => part !== '');
 
       const validTypes = ['full', 'crop', 'circle'];
-      const type = validTypes.includes(parts[0].toLowerCase())
+      const type = validTypes.includes(parts[0]?.toLowerCase())
         ? parts.shift()
         : null;
       const packname = parts.shift() || null;
@@ -172,7 +172,7 @@ export class MessageCommandService {
         .filter((part) => part !== '');
 
       const validTypes = ['full', 'crop', 'circle'];
-      const type = validTypes.includes(parts[0].toLowerCase())
+      const type = validTypes.includes(parts[0]?.toLowerCase())
         ? parts.shift()
         : null;
       const packname = parts.shift() || null;
