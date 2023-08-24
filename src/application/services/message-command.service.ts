@@ -136,7 +136,24 @@ export class MessageCommandService {
       payload.message.type === MessageType.image ||
       payload.message.type === MessageType.video
     ) {
-      const media = await this.stickerService.sticker(message.media);
+      const text = message.text?.replace(/^[^\s]+/, '').trim();
+      const parts = text
+        .split('$')
+        .map((part) => part.trim())
+        .filter((part) => part !== '');
+
+      const validTypes = ['full', 'crop', 'circle'];
+      const type = validTypes.includes(parts[0].toLowerCase())
+        ? parts.shift()
+        : null;
+      const packname = parts.shift() || null;
+      const author = parts.shift() || null;
+
+      const media = await this.stickerService.sticker(message.media, {
+        type,
+        packname,
+        author,
+      });
       return {
         content: { conversationId, type: MessageResponseType.sticker, media },
       };
@@ -148,8 +165,25 @@ export class MessageCommandService {
     const { conversationId, message } = payload;
     if (!payload.message.media) return undefined;
     if (payload.message.type === MessageType.image) {
+      const text = message.text?.replace(/^[^\s]+/, '').trim();
+      const parts = text
+        .split('$')
+        .map((part) => part.trim())
+        .filter((part) => part !== '');
+
+      const validTypes = ['full', 'crop', 'circle'];
+      const type = validTypes.includes(parts[0].toLowerCase())
+        ? parts.shift()
+        : null;
+      const packname = parts.shift() || null;
+      const author = parts.shift() || null;
+
       const media = await this.removeBgService.removeBg(message.media);
-      const sticker = await this.stickerService.sticker(media);
+      const sticker = await this.stickerService.sticker(media, {
+        type,
+        packname,
+        author,
+      });
       return {
         content: {
           conversationId,
