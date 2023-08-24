@@ -144,7 +144,7 @@ export class BaileysTransport
     const payload = SendMessageMapper.toSocket(m.body);
     const quoted = this.setQuoted(m.options, m.message);
     await m.socket.sendMessage(m.body.conversationId, payload, {
-      quoted,
+      ...quoted,
       backgroundColor: '#fff',
     });
     if (m.options?.reaction)
@@ -159,7 +159,7 @@ export class BaileysTransport
       : options?.fakeQuoted
       ? {
           quoted: {
-            key: { participant: '0@s.whatsapp.net' },
+            key: { fromMe: true },
             message: { conversation: 'xd' },
           },
         }
