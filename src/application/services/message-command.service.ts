@@ -136,19 +136,7 @@ export class MessageCommandService {
       payload.message.type === MessageType.image ||
       payload.message.type === MessageType.video
     ) {
-      const text = message.text?.replace(/^[^\s]+/, '').trim();
-      const parts = text
-        .split('$')
-        .map((part) => part.trim())
-        .filter((part) => part !== '');
-
-      const validTypes = ['full', 'crop', 'circle'];
-      const type = validTypes.includes(parts[0]?.toLowerCase())
-        ? parts.shift()
-        : null;
-      const packname = parts.shift() || null;
-      const author = parts.shift() || null;
-
+      const { type, packname, author } = this.parseStickerOptions(message.text);
       const media = await this.stickerService.sticker(message.media, {
         type,
         packname,
@@ -165,19 +153,7 @@ export class MessageCommandService {
     const { conversationId, message } = payload;
     if (!payload.message.media) return undefined;
     if (payload.message.type === MessageType.image) {
-      const text = message.text?.replace(/^[^\s]+/, '').trim();
-      const parts = text
-        .split('$')
-        .map((part) => part.trim())
-        .filter((part) => part !== '');
-
-      const validTypes = ['full', 'crop', 'circle'];
-      const type = validTypes.includes(parts[0]?.toLowerCase())
-        ? parts.shift()
-        : null;
-      const packname = parts.shift() || null;
-      const author = parts.shift() || null;
-
+      const { type, packname, author } = this.parseStickerOptions(message.text);
       const media = await this.removeBgService.removeBg(message.media);
       const sticker = await this.stickerService.sticker(media, {
         type,
@@ -193,6 +169,27 @@ export class MessageCommandService {
       };
     }
     return undefined;
+  }
+
+  private parseStickerOptions(text: string): {
+    type: string | null;
+    packname: string | null;
+    author: string | null;
+  } {
+    const cleanedText = text.replace(/^[^\s]+/, '').trim();
+    const parts = cleanedText
+      .split('$')
+      .map((part) => part.trim())
+      .filter((part) => part !== '');
+
+    const validTypes = ['full', 'crop', 'circle'];
+    const type = validTypes.includes(parts[0]?.toLowerCase())
+      ? parts.shift()
+      : null;
+    const packname = parts.shift() || null;
+    const author = parts.shift() || null;
+
+    return { type, packname, author };
   }
 
   private async insult(payload: RequestMessage): Promise<ResponseMessage> {
