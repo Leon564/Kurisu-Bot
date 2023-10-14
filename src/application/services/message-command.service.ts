@@ -274,7 +274,7 @@ export class MessageCommandService {
       content: {
         conversationId,
         type: MessageResponseType.audio,
-        media: response.file as Buffer,
+        media: response.Buffer as Buffer,
         mimetype,
       },
       options: {

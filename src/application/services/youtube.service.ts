@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import MediaTube, { Mp3Response } from 'mediatube';
+import MediaTube, { Mp3Response, Mp4Response } from 'mediatube';
 import { Stream } from 'stream';
 
 @Injectable()
@@ -12,11 +12,12 @@ export class YoutubeService {
 
   async video(query: string): Promise<Stream> {
     try {
-      const mediaTube = await new MediaTube({
+      const mediaTube: Mp4Response = (await new MediaTube({
         VideoQuality: 'highestvideo',
         query,
-        durationLimit: 600,
-      }).toMp4();
+        limit: 1,
+        type: 'mp4',
+      }).download()) as any;
       return mediaTube.fileStream;
     } catch (err) {
       Logger.error(err);
@@ -30,13 +31,16 @@ export class YoutubeService {
 
     try {
       this.isProcessing = true;
-      const mediaTube = await new MediaTube({
+      const mediaTube: Mp3Response = (await new MediaTube({
         AudioQuality: 'highestaudio',
         query,
         cover: true,
-      }).toMp3();
+        type: 'mp3',
+      }).download()) as any;
 
       return mediaTube;
+    } catch (err) {
+      Logger.error(err);
     } finally {
       this.isProcessing = false;
     }
@@ -48,7 +52,7 @@ export class YoutubeService {
         if (!this.isProcessing) {
           resolve();
         } else {
-          setTimeout(checkProcessing, 100);
+          setTimeout(checkProcessing, 1000);
         }
       };
 
