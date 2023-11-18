@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { appConfig } from 'src/configs/app.config';
 import { ConfigType } from '@nestjs/config';
+import { convertImage } from 'C:/Users/nleon/NodeJs Projects/ws-sticker-maker/dist';
 
 @Injectable()
 export class RemoveBgService {
@@ -11,8 +12,8 @@ export class RemoveBgService {
   async removeBg(media: Buffer): Promise<Buffer> {
     const formData = new FormData();
     formData.append('size', 'auto');
-
-    const blob = new Blob([media], { type: 'image/png' });
+    const image = await convertImage(media, { format: 'png' });
+    const blob = new Blob([image], { type: 'image/png' });
     formData.append('image_file', blob, 'image.png');
 
     const response = await fetch('https://api.remove.bg/v1.0/removebg', {

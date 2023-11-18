@@ -7,13 +7,13 @@ import {
   proto,
   WAMessage,
 } from '@whiskeysockets/baileys';
-
 import {
   MessageBody,
   RequestMessage,
 } from 'src/domain/types/request-message.type';
 import { MessageType } from 'src/domain/enums/message-type.enum';
 import { ResponseMessageContent } from 'src/domain/types/response-message.type';
+import { getFileType } from 'src/libs/utils';
 import { Stream } from 'stream';
 
 type Nullable = undefined | null;
@@ -150,6 +150,8 @@ class Message implements MessageBody {
         return MessageType.image;
       case 'stickerMessage':
         return MessageType.sticker;
+      case 'documentMessage':
+        return MessageType.document;
       default:
         return MessageType.unkown;
     }
@@ -164,6 +166,8 @@ class Message implements MessageBody {
         return message?.videoMessage?.caption || '';
       case 'image':
         return message?.imageMessage?.caption || '';
+      case 'document':
+        return message?.documentMessage?.caption || '';
       default:
         return undefined;
     }
@@ -178,7 +182,8 @@ class Message implements MessageBody {
   private async downloadMedia(): Promise<void> {
     try {
       // validate type
-      const validTypes = ['video', 'image', 'sticker'];
+      const validTypes = ['video', 'image', 'sticker', 'document'];
+
       if (!validTypes.includes(this.type)) return;
 
       const type = `${this.type}Message`;
@@ -194,6 +199,15 @@ class Message implements MessageBody {
       this.media = Buffer.from([]);
       for await (const chunk of stream)
         this.media = Buffer.concat([this.media, chunk]);
+
+      if (this.type === 'document') {
+        const { mime } = await getFileType(this.media);
+        this.type = mime.includes('video')
+          ? MessageType.video
+          : mime.includes('image')
+          ? MessageType.image
+          : MessageType.unkown;
+      }
     } catch (err: unknown) {
       console.log({ err });
       this.media = undefined;

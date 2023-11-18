@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import Sticker from 'ws-sticker-maker';
+import Sticker, { convertImage } from 'ws-sticker-maker';
 import { Buffer } from 'buffer';
 import EzGif, { Formats } from 'ez-converter';
 
@@ -30,6 +30,6 @@ export class StickerService {
   }
 
   async image(media: Buffer): Promise<Buffer> {
-    return media;
+    return await convertImage(media, { format: 'png' });
   }
 }
