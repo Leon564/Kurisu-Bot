@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { appConfig } from 'src/configs/app.config';
 import { ConfigType } from '@nestjs/config';
-import { convertImage } from 'C:/Users/nleon/NodeJs Projects/ws-sticker-maker/dist';
+import { convertImage } from 'ws-sticker-maker';
 
 @Injectable()
 export class RemoveBgService {
