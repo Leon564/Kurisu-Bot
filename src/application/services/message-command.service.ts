@@ -105,7 +105,7 @@ export class MessageCommandService {
   }
 
   private testPattern(pattern: string, text: string): boolean {
-    const validator = new RegExp(`${pattern}\\b`, 'gi');
+    const validator = new RegExp(`^${pattern}\\b`, 'gi');
     return validator.test(text);
   }
 
