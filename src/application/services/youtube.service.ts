@@ -5,13 +5,20 @@ import { Stream } from 'stream';
 @Injectable()
 export class YoutubeService {
   private isProcessing: boolean;
+  private queue: any[];
 
   constructor() {
     this.isProcessing = false;
+    this.queue = [];
   }
 
   async video(query: string): Promise<Stream> {
+    if (this.isProcessing) {
+      await this.waitForProcessing();
+    }
+
     try {
+      this.isProcessing = true;
       const mediaTube: Mp4Response = (await new MediaTube({
         VideoQuality: 'highestvideo',
         query,
@@ -21,12 +28,20 @@ export class YoutubeService {
       return mediaTube.fileStream;
     } catch (err) {
       Logger.error(err);
+    } finally {
+      this.isProcessing = false;
+      const next = this.queue.shift();
+      if (next) {
+        next();
+      }
     }
   }
+
   async music(query: string): Promise<Mp3Response> {
     if (this.isProcessing) {
-      // Si ya hay una petición en proceso, esperamos a que termine y devolvemos el resultado.
-      await this.waitForProcessing();
+      await new Promise((resolve) => {
+        this.queue.push(resolve);
+      });
     }
 
     try {
@@ -37,12 +52,15 @@ export class YoutubeService {
         cover: true,
         type: 'mp3',
       }).download()) as any;
-
       return mediaTube;
     } catch (err) {
       Logger.error(err);
     } finally {
       this.isProcessing = false;
+      const next = this.queue.shift();
+      if (next) {
+        next();
+      }
     }
   }
 
