@@ -54,7 +54,7 @@ export class BaileysTransport
       auth: this.options.state,
       printQRInTerminal: true,
       syncFullHistory: false,
-      version: [2, 2401, 3],
+      version: [2, 2403, 2],
       msgRetryCounterCache: new NodeCache(),
       getMessage: this.getMessage,
     });
