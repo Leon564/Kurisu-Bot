@@ -5,6 +5,7 @@ import WhatsAppSocket, {
   WAMessageKey,
   WAPresence,
   WASocket,
+  isJidGroup,
   makeInMemoryStore,
   proto,
 } from '@whiskeysockets/baileys';
@@ -22,6 +23,7 @@ import {
 import { SendMessageMapper } from './baileys.mapper';
 import { Logger } from '@nestjs/common';
 import * as NodeCache from 'node-cache';
+import { MessageResponseType } from 'src/domain/enums/message-response-type.enum';
 
 type Options = {
   state: AuthenticationState;
@@ -52,7 +54,7 @@ export class BaileysTransport
       auth: this.options.state,
       printQRInTerminal: true,
       syncFullHistory: false,
-      version: [2, 2349, 2],
+      version: [2, 2401, 3],
       msgRetryCounterCache: new NodeCache(),
       getMessage: this.getMessage,
     });
@@ -113,6 +115,8 @@ export class BaileysTransport
               options: {
                 setPresence: (state: WAPresence) =>
                   this.setPresence(state, message.conversationId, socket),
+                tagAll: () =>
+                  this.tagAll(message.conversationId, message.userId, socket),
               },
             };
             const resutl: ResponseMessage = await handler(payload, ctx);
@@ -173,6 +177,46 @@ export class BaileysTransport
     socket: WASocket,
   ) {
     await socket.sendPresenceUpdate(status, chatId);
+  }
+
+  //tag all participants in a group
+  private async tagAll(chatId: string, userId: string, socket: WASocket) {
+    const data = await socket.groupMetadata(chatId);
+    const isGroup = isJidGroup(chatId);
+    if (!isGroup) return;
+
+    const isAdmin = data.participants.filter(
+      (p) => p.id === userId && p?.admin,
+    );
+
+    const participants = data.participants.filter(
+      (p) => p.id !== userId && p.id !== socket.user.id.replace(/:.*@/, '@'),
+    );
+
+    let messageBody = {
+      conversationId: chatId,
+      type: MessageResponseType.text,
+      text: 'No tienes acceso a este comando o no hay participantes en el grupo',
+      mentions: undefined,
+    };
+    if (isAdmin.length > 0 && participants.length > 0) {
+      const mentions = participants.map((p) => p.id);
+      const mentionsText = mentions.map((m) => `@${m.split('@')[0]}`).join(' ');
+
+      messageBody = {
+        conversationId: chatId,
+        type: MessageResponseType.text,
+        text: mentionsText,
+        mentions,
+      };
+    }
+
+    this.sendMessage({
+      socket,
+      body: messageBody,
+    });
+
+    Logger.log(JSON.stringify({ type: 'tagAll', chatId, userId }));
   }
 
   private logMessage(message: RequestMessage): void {

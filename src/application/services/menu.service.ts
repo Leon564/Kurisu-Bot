@@ -26,7 +26,12 @@ export class MenuService {
       `*${prefix}video*: _Busca y recibe un video de youtube._`,
       `*${prefix}roll*: _Tira un dado de 6 caras._`,
     ].join('\n');
-    const text = `⌘⌘⌘⌘⌘ *MENU* ⌘⌘⌘⌘⌘\n\n${commands}\n\n⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘`;
+
+    const groupCommands = [
+      `*${prefix}tagall*: _Menciona a todos los participantes del grupo._`,
+    ].join('\n');
+
+    const text = `⌘⌘⌘⌘⌘ *MENU* ⌘⌘⌘⌘⌘\n\n${commands}\n\n ⌘⌘⌘⌘⌘ *GRUPOS* ⌘⌘⌘⌘⌘\n\n${groupCommands}\n\n⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘`;
     return text;
   }
 }
