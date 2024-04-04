@@ -51,7 +51,6 @@ export class YoutubeService {
         query,
         cover: true,
         type: 'mp3',
-        timeout: 200000,
       }).download()) as any;
       return mediaTube;
     } catch (err) {
