@@ -101,6 +101,10 @@ export class MessageCommandService {
       return this.lyrics(payload);
     }
 
+    if (this.testPattern(CommandName.TAGALL, text)) {
+      return options.tagAll();
+    }
+
     return undefined;
   }
 

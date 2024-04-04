@@ -16,4 +16,5 @@ export const CommandName = {
   IMAGE: `${prefix}image|${prefix}img`,
   ROLL: `${prefix}roll`,
   LYRICS: `${prefix}lyrics|${prefix}lyric`,
+  TAGALL: `${prefix}tagall`,
 };
