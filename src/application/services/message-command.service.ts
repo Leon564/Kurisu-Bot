@@ -13,6 +13,7 @@ import { YoutubeService } from './youtube.service';
 import { MenuService } from './menu.service';
 import { MiscService } from './misc.service';
 import { handleOptions } from 'src/domain/types/handle-options.type';
+import { COMMAND_NOT_AVAILABLE } from 'src/libs/utils/constants';
 
 @Injectable()
 export class MessageCommandService {
@@ -274,15 +275,25 @@ export class MessageCommandService {
     const prompt = text?.replace(/^[^\s]+/, '').trim();
     const response = await this.youtubeService.music(prompt);
     const mimetype = payload.device === 'android' ? 'audio/mp4' : 'audio/mpeg';
+
+    if (response?.Buffer) {
+      return {
+        content: {
+          conversationId,
+          type: MessageResponseType.audio,
+          media: response.Buffer as Buffer,
+          mimetype,
+        },
+        options: {
+          quoted: true,
+        },
+      };
+    }
     return {
       content: {
         conversationId,
-        type: MessageResponseType.audio,
-        media: response.Buffer as Buffer,
-        mimetype,
-      },
-      options: {
-        quoted: true,
+        type: MessageResponseType.text,
+        text: COMMAND_NOT_AVAILABLE,
       },
     };
   }
