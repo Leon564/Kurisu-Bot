@@ -26,7 +26,7 @@ export class SendMessageMapper {
 
     const [userId] = message.key.remoteJid.split('@');
     let userNumber = userId;
-    if (isJidGroup(message.key.remoteJid)) {
+    if (isJidGroup(message.key.remoteJid) && message.key.participant) {
       const [participant] = message.key.participant.split('@');
       userNumber = participant;
     }
