@@ -19,7 +19,7 @@ export class ChatService {
     try {
       const result = await this.openai.createChatCompletion({
         n: 1,
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o',
         messages: [
           { role: 'system', content: 'soy un bot, me llamo Kurisu' },
           { role: 'system', content: 'solo dare respuestas muy cortas' },

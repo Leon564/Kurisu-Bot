@@ -6,7 +6,6 @@ import WhatsAppSocket, {
   WAPresence,
   WASocket,
   isJidGroup,
-  makeInMemoryStore,
   proto,
 } from '@whiskeysockets/baileys';
 import {
@@ -22,8 +21,9 @@ import {
 } from 'src/domain/types/response-message.type';
 import { SendMessageMapper } from './baileys.mapper';
 import { Logger } from '@nestjs/common';
-import * as NodeCache from 'node-cache';
 import { MessageResponseType } from 'src/domain/enums/message-response-type.enum';
+import * as QRCode from 'qrcode';
+import P from 'pino';
 
 type Options = {
   state: AuthenticationState;
@@ -42,21 +42,25 @@ export class BaileysTransport
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const parent = this;
 
-    this.store?.readFromFile('./baileys_store_multi.json');
-    // save every 10s
-    setInterval(() => {
-      this.store?.writeToFile('./baileys_store_multi.json');
-    }, 10_000);
-
     console.log('baileys started');
 
     const socket = WhatsAppSocket({
       auth: this.options.state,
-      printQRInTerminal: true,
-      syncFullHistory: false,
-      version: [2, 2403, 2],
-      msgRetryCounterCache: new NodeCache(),
-      getMessage: this.getMessage,
+      logger: P(),
+      //printQRInTerminal: true,
+      // syncFullHistory: false,
+      // version: [2, 2403, 2],
+    });
+
+    socket.ev.on('connection.update', async (update) => {
+      const { connection, lastDisconnect, qr } = update;
+      // on a qr event, the connection and lastDisconnect fields will be empty
+
+      // In prod, send this string to your frontend then generate the QR there
+      if (qr) {
+        // as an example, this prints the qr code to the terminal
+        console.log(await QRCode.toString(qr, { type: 'terminal' }));
+      }
     });
 
     socket.ev.on('creds.update', this.options.saveCreds);
@@ -225,20 +229,4 @@ export class BaileysTransport
     const raw = JSON.stringify({ conversationId, type, text });
     Logger.log(raw);
   }
-
-  private async getMessage(
-    key: WAMessageKey,
-  ): Promise<WAMessageContent | undefined> {
-    if (this.store) {
-      const msg = await this.store.loadMessage(key.remoteJid, key.id);
-      return msg?.message || undefined;
-    }
-
-    // only if store is present
-    return proto.Message.fromObject({});
-  }
-
-  private store = !process.argv.includes('--no-store')
-    ? makeInMemoryStore({})
-    : undefined;
 }
