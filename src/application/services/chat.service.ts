@@ -1,40 +1,56 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { Configuration, OpenAIApi } from 'openai';
 import { appConfig } from 'src/configs/app.config';
 
 @Injectable()
 export class ChatService {
-  private openai: OpenAIApi;
+  private readonly logger = new Logger(ChatService.name);
+  private readonly apiUrl =
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
   constructor(
     @Inject(appConfig.KEY) private configs: ConfigType<typeof appConfig>,
-  ) {
-    const apiKey = this.configs.openAiApiKey;
-    const configuration = new Configuration({ apiKey });
-    this.openai = new OpenAIApi(configuration);
-  }
+  ) {}
 
   async send(text: string): Promise<string> {
+    const url = `${this.apiUrl}?key=${this.configs.geminiApiKey}`;
+
+    const systemPrompt = [
+      'Eres un bot llamado Kurisu.',
+      'Tratas de ser breve y conciso.',
+      'Tu personalidad está basada en Makise Kurisu del anime Steins;Gate.',
+    ].join(' ');
+
+    const payload = {
+      contents: [
+        {
+          parts: [{ text: `gemini:${systemPrompt}\n\nuser:${text}` }],
+        },
+      ],
+    };
+
     try {
-      const result = await this.openai.createChatCompletion({
-        n: 1,
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: 'soy un bot, me llamo Kurisu' },
-          { role: 'system', content: 'solo dare respuestas muy cortas' },
-          {
-            role: 'system',
-            content:
-              'mi personalidad esta basada en Makise Kurisu del anime steins;gate',
-          },
-          { role: 'user', content: text || '' },
-        ],
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
-      return result?.data?.choices?.[0]?.message?.content;
-    } catch (err) {
-      Logger.error('Error on ChatGPT response');
-      throw err;
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      const candidates = data?.candidates || [];
+      const content = candidates[0]?.content?.parts?.[0]?.text;
+
+      return content || 'No response from Gemini.';
+    } catch (error) {
+      this.logger.error('Error in Gemini API response', error);
+      throw error;
     }
   }
 }

@@ -233,20 +233,20 @@ export class MessageCommandService {
   private async chat(payload: RequestMessage): Promise<ResponseMessage> {
     const { conversationId, message } = payload;
     const text = message?.text || '';
-    const whitelist: string[] = await this.firebaseService.getWhiteList();
+    // const whitelist: string[] = await this.firebaseService.getWhiteList();
     const prompt = text?.replace(/^[^\s]+/, '').trim();
-    const isConversationNumber = whitelist?.includes(payload.userNumber);
+    //const isConversationNumber = whitelist?.includes(payload.userNumber);
 
-    if (isConversationNumber) {
-      const response = await this.chatService.send(prompt);
-      return {
-        content: {
-          conversationId,
-          type: MessageResponseType.text,
-          text: response,
-        },
-      };
-    }
+    //if (isConversationNumber) {
+    const response = await this.chatService.send(prompt);
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.text,
+        text: response,
+      },
+    };
+    //}
     return {
       content: {
         conversationId,
