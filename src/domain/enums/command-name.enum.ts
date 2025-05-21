@@ -5,7 +5,7 @@ export const CommandName = {
   PING: `${prefix}ping`,
   HELP: `${prefix}help`,
   STICKER: `${prefix}sticker|${prefix}stiker`,
-  GPT: `${prefix}gpt|${prefix}chat`,
+  GPT: `${prefix}gpt|${prefix}chat|${prefix}ai|${prefix}gemini`,
   INSULT: `${prefix}insult`,
   PHRASE: `${prefix}frase`,
   GREETING: `${prefix}hola`,

@@ -18,7 +18,7 @@ export class MenuService {
       `*${prefix}stickerbg*: _Convierte cualquier imagen en sticker con fondo transparente._`,
       `*${prefix}gif*: _Convierte cualquier sticker en gif._`,
       `*${prefix}image*: _Convierte cualquier sticker en imagen._`,
-      `*${prefix}chat*: _Puedes conversar con chatgpt, (necesitas pedir acceso)(beta)._`,
+      `*${prefix}chat*: _Puedes conversar con gemini,(beta)._`,
       `*${prefix}insult*: _Envia un instulto a la persona que mencionas._`,
       `*${prefix}frase*: _Envia una frase de algun anime._`,
       `*${prefix}lyrics*: _Busca la letra de una cancion._`,
