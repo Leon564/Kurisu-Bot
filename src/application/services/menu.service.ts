@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { appConfig } from 'src/configs/app.config';
+import { getLastCommitDate } from 'src/libs/utils/get-last-commit-date';
 
 @Injectable()
 export class MenuService {
@@ -31,7 +32,14 @@ export class MenuService {
       `*${prefix}tagall*: _Menciona a todos los participantes del grupo._`,
     ].join('\n');
 
-    const text = `⌘⌘⌘⌘⌘ *MENU* ⌘⌘⌘⌘⌘\n\n${commands}\n\n ⌘⌘⌘⌘⌘ *GRUPOS* ⌘⌘⌘⌘⌘\n\n${groupCommands}\n\n⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘`;
+    const lastCommit = getLastCommitDate();
+
+    const footer = lastCommit
+      ? `\n\n🕓 Última actualización: ${new Date(lastCommit).toLocaleString()}`
+      : '';
+
+    const text = `⌘⌘⌘⌘⌘ *MENU* ⌘⌘⌘⌘⌘\n\n${commands}\n\n⌘⌘⌘⌘⌘ *GRUPOS* ⌘⌘⌘⌘⌘\n\n${groupCommands}\n${footer}\n\n⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘⌘`;
+
     return text;
   }
 }
