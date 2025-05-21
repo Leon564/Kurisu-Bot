@@ -54,12 +54,11 @@ export class BaileysTransport
 
     socket.ev.on('connection.update', async (update) => {
       const { connection, lastDisconnect, qr } = update;
-      // on a qr event, the connection and lastDisconnect fields will be empty
 
-      // In prod, send this string to your frontend then generate the QR there
       if (qr) {
-        // as an example, this prints the qr code to the terminal
-        console.log(await QRCode.toString(qr, { type: 'terminal' }));
+        console.log(
+          await QRCode.toString(qr, { type: 'terminal', small: true }),
+        );
       }
     });
 
