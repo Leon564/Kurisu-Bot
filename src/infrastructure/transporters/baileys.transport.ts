@@ -38,19 +38,23 @@ export class BaileysTransport
     super();
   }
 
-  listen() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const parent = this;
-
-    console.log('baileys started');
-
-    const socket = WhatsAppSocket({
+  createSocket() {
+    return WhatsAppSocket({
       auth: this.options.state,
       logger: P(),
       //printQRInTerminal: true,
       // syncFullHistory: false,
       // version: [2, 2403, 2],
     });
+  }
+
+  listen() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const parent = this;
+
+    console.log('baileys started');
+
+    let socket = this.createSocket();
 
     socket.ev.on('connection.update', async (update) => {
       const { connection, lastDisconnect, qr } = update;
@@ -74,7 +78,7 @@ export class BaileysTransport
         const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
         console.error(lastDisconnect?.error);
         console.info('reconnecting:', shouldReconnect);
-        if (shouldReconnect) process.exit();
+        if (shouldReconnect) socket = this.createSocket();
       }
     });
 
