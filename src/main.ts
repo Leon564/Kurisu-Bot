@@ -35,7 +35,7 @@ async function bootstrap() {
     strategy: new BaileysTransport({ state, saveCreds }),
   });
 
-  await app.startAllMicroservices();
+  app.startAllMicroservices();
   await app.listen(port);
 }
 

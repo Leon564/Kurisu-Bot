@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './application/controllers/app.controller';
 import { ChatService } from './application/services/chat.service';
 import { MessageCommandService } from './application/services/message-command.service';
@@ -12,10 +13,14 @@ import { RemoveBgService } from './application/services/remove-bg.service';
 import { YoutubeService } from './application/services/youtube.service';
 import { MenuService } from './application/services/menu.service';
 import { MiscService } from './application/services/misc.service';
+import { ClaroTaskService } from './tasks/claro-package-task.service';
 
 @Module({
   controllers: [AppController],
-  imports: [ConfigModule.forRoot({ load: [appConfig, firebaseConfig] })],
+  imports: [
+    ConfigModule.forRoot({ load: [appConfig, firebaseConfig] }),
+    ScheduleModule.forRoot(),
+  ],
   providers: [
     MessageCommandService,
     GroupParticipantsCommandService,
@@ -26,6 +31,7 @@ import { MiscService } from './application/services/misc.service';
     YoutubeService,
     MenuService,
     MiscService,
+    ClaroTaskService,
   ],
 })
 export class AppModule {}

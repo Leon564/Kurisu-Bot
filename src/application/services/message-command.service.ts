@@ -32,6 +32,11 @@ export class MessageCommandService {
 
     if (payload?.fromMe) return undefined;
 
+    if (this.testPattern(CommandName.CLARO, text)) {
+      options.setPresence('composing');
+      return this.claro(payload);
+    }
+
     if (this.testPattern(CommandName.PING, text)) {
       options.setPresence('composing');
       return this.ping(payload);
@@ -112,6 +117,21 @@ export class MessageCommandService {
   private testPattern(pattern: string, text: string): boolean {
     const validator = new RegExp(`^${pattern}\\b`, 'gi');
     return validator.test(text);
+  }
+
+  private async claro(payload: RequestMessage): Promise<ResponseMessage> {
+    const { conversationId } = payload;
+    const ResponseText = await this.miscService.claro(this.firebaseService);
+    return {
+      content: {
+        conversationId,
+        type: MessageResponseType.text,
+        text: ResponseText,
+      },
+      options: {
+        quoted: true,
+      },
+    };
   }
 
   private ping(payload: RequestMessage): ResponseMessage {
@@ -245,15 +265,6 @@ export class MessageCommandService {
         type: MessageResponseType.text,
         text: response,
       },
-    };
-    //}
-    return {
-      content: {
-        conversationId,
-        type: MessageResponseType.text,
-        text: 'No tienes acceso a este comando',
-      },
-      options: { quoted: true },
     };
   }
 

@@ -2,6 +2,7 @@ import 'dotenv/config';
 const prefix = process.env.PREFIX;
 
 export const CommandName = {
+  CLARO: `${prefix}claro`,
   PING: `${prefix}ping`,
   HELP: `${prefix}help`,
   STICKER: `${prefix}sticker|${prefix}stiker`,
