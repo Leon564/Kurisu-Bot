@@ -15,8 +15,8 @@ export class ClaroTaskService {
     const now = moment().tz('America/El_Salvador'); //utc-6
     console.log(now.hour());
 
-    //ejecutar a la 1:00 AM si no retornar null
-    if (now.hour() !== 1 && now.minute() !== 0) return;
+    //ejecutar a la 3:00 AM si no retornar null
+    if (now.hour() !== 3 && now.minute() !== 0) return;
 
     this.logger.log('Tarea diaria ejecutada a la 1:00 AM');
 
