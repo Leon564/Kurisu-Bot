@@ -36,7 +36,9 @@ lerna-debug.log*
 
 .vscode
 yarn.lock
-auth_info
+auth_info/*
+!auth_info/*.example.json
+!auth_info/README-*.md
 baileys_store_multi.json
 
 .env
