@@ -34,7 +34,7 @@ export class ClaroTaskService {
     const initToken = await getInitTokenFetch.json();
 
     const requestAuth = await fetch(
-      'https://paquetes.miclaro.com.sv/eiko-profile/Profile/SendPackage',
+      'https://paquetes1.miclaro.com.sv/eiko-profile/Profile/SendPackage',
       {
         headers: {
           accept: 'application/json, text/plain, */*',
@@ -61,7 +61,7 @@ export class ClaroTaskService {
     const token = await requestAuth.json();
 
     const request = await fetch(
-      'https://paquetes.miclaro.com.sv/eiko-offer/Packages?isAtlasTheme=true',
+      'https://paquetes1.miclaro.com.sv/eiko-offer/Packages?isAtlasTheme=true',
       {
         headers: {
           accept: 'application/json, text/plain, */*',
