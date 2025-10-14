@@ -50,6 +50,7 @@ export class BaileysTransport
       //printQRInTerminal: true,
       // syncFullHistory: false,
       // version: [2, 2403, 2],
+      version: [2, 3000, 1027934701],
     });
 
     socket.ev.on('connection.update', async (update) => {
