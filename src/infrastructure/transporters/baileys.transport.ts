@@ -6,9 +6,10 @@ import WhatsAppSocket, {
   WAPresence,
   WASocket,
   isJidGroup,
-  makeInMemoryStore,
   proto,
+  fetchLatestBaileysVersion,
 } from '@whiskeysockets/baileys';
+import * as QRCode from 'qrcode';
 import {
   Server,
   CustomTransportStrategy,
@@ -38,31 +39,64 @@ export class BaileysTransport
     super();
   }
 
-  listen() {
+  private printQRInTerminal(qr: string): void {
+    QRCode.toString(
+      qr,
+      {
+        type: 'terminal',
+        small: true,
+        width: 40,
+      },
+      (err: any, qrString: string) => {
+        if (err) {
+          console.log('Error generando QR:', err);
+          // Fallback: mostrar la URL como antes
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+            qr,
+          )}`;
+          console.log('📱 Abre esta URL en tu navegador para ver el QR:');
+          console.log(qrUrl);
+        } else {
+          console.log('\n🔗 Código QR para WhatsApp (compacto):\n');
+          console.log(qrString);
+          console.log(
+            'Escanéalo con tu aplicación de WhatsApp para conectarte\n',
+          );
+        }
+      },
+    );
+  }
+
+  async listen() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const parent = this;
 
-    this.store?.readFromFile('./baileys_store_multi.json');
-    // save every 10s
-    setInterval(() => {
-      this.store?.writeToFile('./baileys_store_multi.json');
-    }, 10_000);
+    // this.store?.readFromFile('./baileys_store_multi.json');
+    // // save every 10s
+    // setInterval(() => {
+    //   this.store?.writeToFile('./baileys_store_multi.json');
+    // }, 10_000);
 
     console.log('baileys started');
-
+    const { version } = await fetchLatestBaileysVersion();
     const socket = WhatsAppSocket({
       auth: this.options.state,
-      printQRInTerminal: true,
-      syncFullHistory: false,
-      version: [2, 2429, 10],
-      msgRetryCounterCache: new NodeCache(),
-      getMessage: this.getMessage,
+      // printQRInTerminal: true, // Deprecated - removido
+      //syncFullHistory: false,
+      version,
+      // msgRetryCounterCache: new NodeCache(),
+      // getMessage: this.getMessage,
     });
 
     socket.ev.on('creds.update', this.options.saveCreds);
 
     socket.ev.on('connection.update', (data) => {
-      const { connection, lastDisconnect } = data;
+      const { connection, lastDisconnect, qr } = data;
+
+      // Manejar QR manualmente
+      if (qr) {
+        this.printQRInTerminal(qr);
+      }
 
       if (connection === 'open') console.log('opened connection');
 
@@ -229,16 +263,12 @@ export class BaileysTransport
   private async getMessage(
     key: WAMessageKey,
   ): Promise<WAMessageContent | undefined> {
-    if (this.store) {
-      const msg = await this.store.loadMessage(key.remoteJid, key.id);
-      return msg?.message || undefined;
-    }
+    // if (this.store) {
+    //   const msg = await this.store.loadMessage(key.remoteJid, key.id);
+    //   return msg?.message || undefined;
+    // }
 
     // only if store is present
     return proto.Message.fromObject({});
   }
-
-  private store = !process.argv.includes('--no-store')
-    ? makeInMemoryStore({})
-    : undefined;
 }
