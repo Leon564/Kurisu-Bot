@@ -35,6 +35,8 @@ export class BaileysTransport
   extends Server
   implements CustomTransportStrategy
 {
+  private socket: WASocket | null = null;
+
   constructor(private options: Options) {
     super();
   }
@@ -68,7 +70,6 @@ export class BaileysTransport
   }
 
   async listen() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const parent = this;
 
     // this.store?.readFromFile('./baileys_store_multi.json');
@@ -87,6 +88,9 @@ export class BaileysTransport
       // msgRetryCounterCache: new NodeCache(),
       // getMessage: this.getMessage,
     });
+
+    // Asignar el socket a la propiedad de clase
+    this.socket = socket;
 
     socket.ev.on('creds.update', this.options.saveCreds);
 
@@ -195,13 +199,13 @@ export class BaileysTransport
     return options?.quoted
       ? { quoted: message }
       : options?.fakeQuoted
-      ? {
-          quoted: {
-            key: { fromMe: true },
-            message: { conversation: 'xd' },
-          },
-        }
-      : undefined;
+        ? {
+            quoted: {
+              key: { fromMe: true },
+              message: { conversation: 'xd' },
+            },
+          }
+        : undefined;
   }
 
   //change the bot status to "online, typing, paused, offline"
@@ -270,5 +274,19 @@ export class BaileysTransport
 
     // only if store is present
     return proto.Message.fromObject({});
+  }
+
+  // Métodos requeridos por la nueva versión de NestJS
+  on<
+    EventKey extends string = string,
+    EventCallback extends Function = Function,
+  >(event: EventKey, callback: EventCallback): any {
+    // Implementación mínima para satisfacer la interface
+    return this;
+  }
+
+  unwrap(): any {
+    // Retorna el socket de WhatsApp o null si no está disponible
+    return this.socket || null;
   }
 }

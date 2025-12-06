@@ -205,8 +205,8 @@ class Message implements MessageBody {
         this.type = mime.includes('video')
           ? MessageType.video
           : mime.includes('image')
-          ? MessageType.image
-          : MessageType.unkown;
+            ? MessageType.image
+            : MessageType.unkown;
       }
     } catch (err: unknown) {
       console.log({ err });

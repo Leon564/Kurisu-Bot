@@ -13,7 +13,7 @@ export class RemoveBgService {
     const formData = new FormData();
     formData.append('size', 'auto');
     const image = await convertImage(media, { format: 'png' });
-    const blob = new Blob([image], { type: 'image/png' });
+    const blob = new Blob([new Uint8Array(image)], { type: 'image/png' });
     formData.append('image_file', blob, 'image.png');
 
     const response = await fetch('https://api.remove.bg/v1.0/removebg', {
