@@ -20,18 +20,8 @@ export class ClaroTaskService {
 
     this.logger.log('Tarea diaria ejecutada a la 1:00 AM');
 
-    const getInitTokenFetch = await fetch('https://claro-token.onrender.com', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        authorization: `Basic ${Buffer.from(
-          `${process.env.CLARO_USER}:${process.env.CLARO_SECRET}`,
-        ).toString('base64')}`,
-      },
-    });
-
-    const initToken = await getInitTokenFetch.json();
+    // Obtener el token usando el nuevo método
+    const initToken = await this.getMceToken();
 
     const requestAuth = await fetch(
       'https://paquetes1.miclaro.com.sv/eiko-profile/Profile/SendPackage',
@@ -40,7 +30,7 @@ export class ClaroTaskService {
           accept: 'application/json, text/plain, */*',
           'accept-language':
             'es-419,es;q=0.9,es-ES;q=0.8,en;q=0.7,en-GB;q=0.6,en-US;q=0.5,es-US;q=0.4',
-          authorization: `Bearer ${initToken['MCE:THE-TOKEN']}`,
+          authorization: `Bearer ${initToken}`,
           'content-type': 'application/json',
           priority: 'u=1, i',
           'sec-ch-ua':
@@ -84,7 +74,7 @@ export class ClaroTaskService {
         method: 'GET',
       },
     );
-    console.log(request);
+
     const result = await request.json();
 
     const monthlyPromotions = result?.find(
@@ -114,5 +104,31 @@ export class ClaroTaskService {
     });
 
     return packages;
+  }
+
+  /**
+   * Obtiene el MCE:THE-TOKEN interceptando el redirect
+   * antes de que el navegador cargue la URL destino.
+   */
+  private async getMceToken(): Promise<string> {
+    // paquetes1.miclaro.com.sv/r/ genera un redirect con ?t=<JWT>
+    let url = 'https://paquetes1.miclaro.com.sv/r/';
+
+    for (let i = 0; i < 5; i++) {
+      const res = await fetch(url, { redirect: 'manual' });
+      const location = res.headers.get('location');
+      if (!location) break;
+
+      const fullUrl = location.startsWith('http')
+        ? location
+        : new URL(location, url).href;
+
+      const token = new URL(fullUrl).searchParams.get('t');
+      if (token) return token;
+
+      url = fullUrl;
+    }
+
+    throw new Error('No se pudo obtener el token');
   }
 }
