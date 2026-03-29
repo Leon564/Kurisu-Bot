@@ -93,7 +93,7 @@ export class ClaroTaskService {
     const packages = ilimit?.map((x: any) => ({
       name: x.name,
       id: x.id,
-      url: `https://paquetes.miclaro.com.sv/portal/generateFolio?packId=${x.id}&paymentId=b744642d-ecc0-4b41-9ffd-5600df9983ba`,
+      url: `https://paquetes1.miclaro.com.sv/portal/generateFolio?packId=${x.id}&paymentId=b744642d-ecc0-4b41-9ffd-5600df9983ba`,
     }));
 
     if (packages.length === 0) return;
