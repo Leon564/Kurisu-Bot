@@ -79,12 +79,12 @@ export class BaileysTransport
     // }, 10_000);
 
     console.log('baileys started');
-    const { version } = await fetchLatestBaileysVersion();
+    //const { version } = await fetchLatestBaileysVersion();
     const socket = WhatsAppSocket({
       auth: this.options.state,
       // printQRInTerminal: true, // Deprecated - removido
       //syncFullHistory: false,
-      version,
+      version: [2, 3000, 1043430842],
       // msgRetryCounterCache: new NodeCache(),
       // getMessage: this.getMessage,
     });
