@@ -32,6 +32,18 @@
 $ yarn install
 ```
 
+### Nota sobre `@whiskeysockets/baileys`
+
+La versión está fijada **exacta** (`6.7.23`), sin `^`. No la cambies a un rango.
+
+En el registro existe una publicación mal numerada, `6.17.16` (marzo 2025), que
+semver considera mayor que `6.7.23` porque compara `17 > 7`. Esa versión es
+anterior al parche del zero-day de spoofing de mensajes
+([GHSA-qvv5-jq5g-4cgg](https://github.com/WhiskeySockets/Baileys/security/advisories/GHSA-qvv5-jq5g-4cgg)),
+así que cualquier rango `^6.x` la instala y reintroduce la vulnerabilidad.
+Como `yarn.lock` está en `.gitignore`, el pin de `package.json` es lo único que
+protege la instalación en despliegue.
+
 ## Running the app
 
 ```bash
