@@ -150,4 +150,13 @@ export class FirebaseAuthStore {
       .child('creds')
       .set(JSON.stringify(creds, BufferJSON.replacer));
   }
+
+  /**
+   * Drops the whole session subtree. Used when WhatsApp logs us out: the stored
+   * credentials are dead and keeping them would only make the next connection
+   * fail the same way.
+   */
+  async clear(): Promise<void> {
+    await this.root.remove();
+  }
 }

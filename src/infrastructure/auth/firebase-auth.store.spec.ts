@@ -28,6 +28,12 @@ class FakeRef implements AuthRef {
   }
 
   async remove(): Promise<void> {
+    // RTDB removes the node and everything under it. At the root the path is
+    // empty, so a prefix check would match nothing — clear the whole map.
+    if (this.path === '') {
+      this.db.data.clear();
+      return;
+    }
     for (const key of [...this.db.data.keys()]) {
       if (key === this.path || key.startsWith(`${this.path}/`)) {
         this.db.data.delete(key);
@@ -213,6 +219,53 @@ describe('FirebaseAuthStore keys', () => {
     const read = await state.keys.get('pre-key', ['1']);
 
     expect(read['1']).toBeNull();
+  });
+});
+
+describe('FirebaseAuthStore clear', () => {
+  it('removes creds and every key of the session', async () => {
+    const db = newDb();
+    const store = new FirebaseAuthStore(new FakeRef(db));
+    const { state, saveCreds } = await store.load();
+    await saveCreds();
+    await state.keys.set({ 'pre-key': { '1': { id: 1 } } } as never);
+    expect(db.data.size).toBeGreaterThan(0);
+
+    await store.clear();
+
+    expect(db.data.size).toBe(0);
+  });
+
+  it('does not serve keys from the wiped session after reloading', async () => {
+    const db = newDb();
+    const store = new FirebaseAuthStore(new FakeRef(db));
+    const first = await store.load();
+    await first.state.keys.set({ 'pre-key': { '1': { id: 1 } } } as never);
+    // prove the value is cached in the first load
+    expect((await first.state.keys.get('pre-key', ['1']))['1']).toEqual({
+      id: 1,
+    });
+
+    await store.clear();
+    const second = await store.load();
+
+    expect((await second.state.keys.get('pre-key', ['1']))['1']).toBeNull();
+  });
+
+  it('issues fresh credentials after a clear', async () => {
+    const db = newDb();
+    const store = new FirebaseAuthStore(new FakeRef(db));
+    const first = await store.load();
+    first.state.creds.registered = true;
+    await first.saveCreds();
+
+    await store.clear();
+    const second = await store.load();
+
+    expect(second.state.creds.registered).toBe(false);
+    expect(second.state.creds.registrationId).not.toBe(
+      first.state.creds.registrationId,
+    );
   });
 });
 
