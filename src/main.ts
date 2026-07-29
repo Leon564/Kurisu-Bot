@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { useMultiFileAuthState } from '@whiskeysockets/baileys';
+import { useMultiFileAuthState } from 'baileys';
 import * as admin from 'firebase-admin';
 
 import { AppModule } from './app.module';

@@ -1,4 +1,4 @@
-import { WAPresence } from '@whiskeysockets/baileys';
+import { WAPresence } from 'baileys';
 
 export type handleOptions = {
   setPresence?: (state: WAPresence) => void;

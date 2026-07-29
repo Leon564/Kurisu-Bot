@@ -6,7 +6,7 @@ import {
   isJidGroup,
   proto,
   WAMessage,
-} from '@whiskeysockets/baileys';
+} from 'baileys';
 import {
   MessageBody,
   RequestMessage,
@@ -24,10 +24,16 @@ export class SendMessageMapper {
     const { messages } = data;
     const [message] = messages;
 
-    const [userId] = message.key.remoteJid.split('@');
+    // v7 addresses senders by LID; the `*Alt` fields carry the phone-number
+    // form, which is what userNumber has always held
+    const [userId] = (message.key.remoteJidAlt || message.key.remoteJid).split(
+      '@',
+    );
     let userNumber = userId;
     if (isJidGroup(message.key.remoteJid) && message.key.participant) {
-      const [participant] = message.key.participant.split('@');
+      const [participant] = (
+        message.key.participantAlt || message.key.participant
+      ).split('@');
       userNumber = participant;
     }
 

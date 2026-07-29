@@ -32,17 +32,19 @@
 $ yarn install
 ```
 
-### Nota sobre `@whiskeysockets/baileys`
+### Nota sobre `baileys`
 
-La versión está fijada **exacta** (`6.7.23`), sin `^`. No la cambies a un rango.
+El paquete se llama ahora `baileys` (antes `@whiskeysockets/baileys`) y está
+fijado **exacto** en `7.0.0-rc13`, sin `^`. Es una release candidate: el rango
+abierto traería otra RC sin avisar. Como `yarn.lock` está en `.gitignore`, el
+pin de `package.json` es lo único que controla qué se instala en despliegue.
 
-En el registro existe una publicación mal numerada, `6.17.16` (marzo 2025), que
-semver considera mayor que `6.7.23` porque compara `17 > 7`. Esa versión es
-anterior al parche del zero-day de spoofing de mensajes
-([GHSA-qvv5-jq5g-4cgg](https://github.com/WhiskeySockets/Baileys/security/advisories/GHSA-qvv5-jq5g-4cgg)),
-así que cualquier rango `^6.x` la instala y reintroduce la vulnerabilidad.
-Como `yarn.lock` está en `.gitignore`, el pin de `package.json` es lo único que
-protege la instalación en despliegue.
+**Requiere Node >= 20.19.0** (declarado en `engines`). Baileys v7 es ESM-only y
+el proyecto sigue siendo CommonJS; funciona porque Node 20.19+ soporta
+`require(esm)`. En Node < 20.19 el arranque falla con `ERR_REQUIRE_ESM`.
+
+No reintroduzcas un `resolutions` para `libsignal`: v6 lo declaraba como URL de
+git y necesitaba redirección, v7 depende de `libsignal@^6.0.0` desde npm.
 
 ## Running the app
 

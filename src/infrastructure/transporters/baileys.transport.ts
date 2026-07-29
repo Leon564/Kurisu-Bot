@@ -1,14 +1,16 @@
 import WhatsAppSocket, {
   AuthenticationState,
   DisconnectReason,
+  GroupParticipant,
   WAMessageContent,
   WAMessageKey,
   WAPresence,
   WASocket,
   isJidGroup,
+  jidNormalizedUser,
   proto,
   fetchLatestBaileysVersion,
-} from '@whiskeysockets/baileys';
+} from 'baileys';
 import * as QRCode from 'qrcode';
 import {
   Server,
@@ -217,19 +219,38 @@ export class BaileysTransport
     await socket.sendPresenceUpdate(status, chatId);
   }
 
+  /**
+   * Every id a participant may be addressed by. Groups are LID-addressed since
+   * v7, so metadata ids and message keys can each arrive as a LID or a phone
+   * number and won't compare equal unless we check both forms.
+   */
+  private participantIds(p: GroupParticipant): string[] {
+    return [p.id, p.lid, p.phoneNumber]
+      .filter(Boolean)
+      .map((jid) => jidNormalizedUser(jid));
+  }
+
   //tag all participants in a group
   private async tagAll(chatId: string, userId: string, socket: WASocket) {
     const data = await socket.groupMetadata(chatId);
     const isGroup = isJidGroup(chatId);
     if (!isGroup) return;
 
+    const sender = jidNormalizedUser(userId);
+    // our own identity is a phone number, but `p.id` is a LID in v7 groups —
+    // comparing only against `user.id` would leave the bot tagging itself
+    const me = [socket.user?.id, socket.user?.lid]
+      .filter(Boolean)
+      .map((jid) => jidNormalizedUser(jid));
+
     const isAdmin = data.participants.filter(
-      (p) => p.id === userId && p?.admin,
+      (p) => this.participantIds(p).includes(sender) && p?.admin,
     );
 
-    const participants = data.participants.filter(
-      (p) => p.id !== userId && p.id !== socket.user.id.replace(/:.*@/, '@'),
-    );
+    const participants = data.participants.filter((p) => {
+      const ids = this.participantIds(p);
+      return !ids.includes(sender) && !ids.some((id) => me.includes(id));
+    });
 
     let messageBody = {
       conversationId: chatId,
@@ -239,7 +260,11 @@ export class BaileysTransport
     };
     if (isAdmin.length > 0 && participants.length > 0) {
       const mentions = participants.map((p) => p.id);
-      const mentionsText = mentions.map((m) => `@${m.split('@')[0]}`).join(' ');
+      // mention the id WA expects, but render the phone number: `p.id` is a LID
+      // in v7 groups and would show up as an opaque string of digits
+      const mentionsText = participants
+        .map((p) => `@${(p.phoneNumber || p.id).split('@')[0]}`)
+        .join(' ');
 
       messageBody = {
         conversationId: chatId,
@@ -273,7 +298,7 @@ export class BaileysTransport
     // }
 
     // only if store is present
-    return proto.Message.fromObject({});
+    return proto.Message.create({});
   }
 
   // Métodos requeridos por la nueva versión de NestJS
