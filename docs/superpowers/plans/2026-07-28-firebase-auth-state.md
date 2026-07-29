@@ -17,7 +17,16 @@
 - Los IDs de llave se codifican escapando `%` `.` `#` `$` `/` `[` `]`, con `%` primero.
 - Ruta raíz en RTDB: `whatsapp-auth/<sessionId>`.
 - `auth_info/` **no se borra**: `youtube.service.ts:23` la usa para cookies.
-- Tests: jest ya configurado (`testRegex: .*\.spec\.ts$`, `rootDir: src`). Correr con `yarn test`.
+- Tests: correr con `yarn test`.
+  - **Corregido durante la ejecución:** el plan asumía que jest funcionaba sin
+    tocar configuración. No era cierto. El runtime CJS de jest intercepta
+    `require` y no honra el soporte `require(esm)` de Node, así que cualquier
+    spec que importara baileys v7 (ESM-only) fallaba al parsearlo. Se pasó jest
+    a ESM nativo: `extensionsToTreatAsEsm` + ts-jest `useESM`, ejecutado con
+    `node --experimental-vm-modules`. La alternativa —transformar baileys con
+    ts-jest— habría procesado un bundle WASM de 2MB en cada corrida.
+  - Bajo ESM el global `jest` no existe; los dobles de prueba se hacen con
+    stubs planos en vez de `jest.spyOn`.
 - Prettier: comillas simples, trailing commas, ancho 80.
 
 ## Desviación del spec (deliberada)

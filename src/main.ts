@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { useMultiFileAuthState } from 'baileys';
+import { FirebaseAuthStore } from './infrastructure/auth/firebase-auth.store';
 import * as admin from 'firebase-admin';
 
 import { AppModule } from './app.module';
@@ -28,11 +28,12 @@ async function bootstrap() {
     databaseURL: firebaseConfigs.dataBaseUrl,
   });
 
-  const { port, authInfoDir } = appConfigs;
-  const { state, saveCreds } = await useMultiFileAuthState(authInfoDir);
+  const { port, waSessionId } = appConfigs;
+  // admin.initializeApp() above is what makes admin.database() usable here
+  const authStore = FirebaseAuthStore.forSession(waSessionId);
 
   app.connectMicroservice({
-    strategy: new BaileysTransport({ state, saveCreds }),
+    strategy: new BaileysTransport({ authStore }),
   });
 
   app.startAllMicroservices();

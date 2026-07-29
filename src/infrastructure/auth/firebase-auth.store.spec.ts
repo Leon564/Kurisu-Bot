@@ -2,7 +2,11 @@ import { AuthRef, FirebaseAuthStore, encodeKeyId } from './firebase-auth.store';
 
 // `failReads` lives on the shared db rather than on a ref, because child() hands
 // back a new ref instance and a stub on the parent would never be reached.
-type FakeDb = { data: Map<string, unknown>; reads: number; failReads?: boolean };
+type FakeDb = {
+  data: Map<string, unknown>;
+  reads: number;
+  failReads?: boolean;
+};
 
 class FakeRef implements AuthRef {
   constructor(

@@ -1,6 +1,4 @@
 import WhatsAppSocket, {
-  AuthenticationState,
-  DisconnectReason,
   GroupParticipant,
   WAMessageContent,
   WAMessageKey,
@@ -11,6 +9,8 @@ import WhatsAppSocket, {
   proto,
   fetchLatestBaileysVersion,
 } from 'baileys';
+import { FirebaseAuthStore } from '../auth/firebase-auth.store';
+import { decideReconnect } from './reconnect.policy';
 import * as QRCode from 'qrcode';
 import {
   Server,
@@ -29,8 +29,7 @@ import * as NodeCache from 'node-cache';
 import { MessageResponseType } from 'src/domain/enums/message-response-type.enum';
 
 type Options = {
-  state: AuthenticationState;
-  saveCreds: () => Promise<void>;
+  authStore: FirebaseAuthStore;
 };
 
 export class BaileysTransport
@@ -38,6 +37,8 @@ export class BaileysTransport
   implements CustomTransportStrategy
 {
   private socket: WASocket | null = null;
+  private reconnectAttempts = 0;
+  private closing = false;
 
   constructor(private options: Options) {
     super();
@@ -72,6 +73,10 @@ export class BaileysTransport
   }
 
   async listen() {
+    await this.connect();
+  }
+
+  private async connect(): Promise<void> {
     const parent = this;
 
     // this.store?.readFromFile('./baileys_store_multi.json');
@@ -80,10 +85,12 @@ export class BaileysTransport
     //   this.store?.writeToFile('./baileys_store_multi.json');
     // }, 10_000);
 
+    const { state, saveCreds } = await this.options.authStore.load();
+
     console.log('baileys started');
     //const { version } = await fetchLatestBaileysVersion();
     const socket = WhatsAppSocket({
-      auth: this.options.state,
+      auth: state,
       // printQRInTerminal: true, // Deprecated - removido
       //syncFullHistory: false,
       version: [2, 3000, 1043430842],
@@ -94,7 +101,7 @@ export class BaileysTransport
     // Asignar el socket a la propiedad de clase
     this.socket = socket;
 
-    socket.ev.on('creds.update', this.options.saveCreds);
+    socket.ev.on('creds.update', saveCreds);
 
     socket.ev.on('connection.update', (data) => {
       const { connection, lastDisconnect, qr } = data;
@@ -104,14 +111,13 @@ export class BaileysTransport
         this.printQRInTerminal(qr);
       }
 
-      if (connection === 'open') console.log('opened connection');
+      if (connection === 'open') {
+        console.log('opened connection');
+        this.reconnectAttempts = 0;
+      }
 
       if (connection === 'close') {
-        const statusCode = (lastDisconnect?.error as any)?.output?.statusCode;
-        const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
-        console.error(lastDisconnect?.error);
-        console.info('reconnecting:', shouldReconnect);
-        if (shouldReconnect) process.exit();
+        void this.handleClose(socket, lastDisconnect?.error);
       }
     });
 
@@ -175,7 +181,57 @@ export class BaileysTransport
     });
   }
 
+  /**
+   * Recreates the socket instead of exiting the process. The 515 WhatsApp sends
+   * right after a QR scan arrives here, which is why pairing no longer needs a
+   * manual restart.
+   */
+  private async handleClose(
+    socket: WASocket | undefined,
+    error: Error | undefined,
+  ): Promise<void> {
+    // Nest is shutting us down; this close is expected.
+    if (this.closing) return;
+
+    console.error(error);
+
+    // Stop the dead socket from delivering anything else to our handlers.
+    socket?.ev.removeAllListeners('creds.update');
+    socket?.ev.removeAllListeners('connection.update');
+    socket?.ev.removeAllListeners('messages.upsert');
+
+    this.reconnectAttempts += 1;
+    const statusCode = (error as any)?.output?.statusCode;
+    const decision = decideReconnect(statusCode, this.reconnectAttempts);
+
+    if (decision.action === 'stop') {
+      Logger.error(`baileys ${decision.reason}; not reconnecting`);
+      return;
+    }
+
+    if (decision.wipeCreds) {
+      Logger.warn('logged out by WhatsApp, clearing stored credentials');
+      await this.options.authStore.clear();
+    }
+
+    Logger.log(
+      `baileys reconnecting in ${decision.delayMs}ms (attempt ${this.reconnectAttempts})`,
+    );
+    this.scheduleReconnect(decision.delayMs);
+  }
+
+  private scheduleReconnect(delayMs: number): void {
+    setTimeout(() => {
+      this.connect().catch((error) => {
+        // A failed reconnect re-enters the same backoff rather than dying.
+        void this.handleClose(undefined, error);
+      });
+    }, delayMs);
+  }
+
   close() {
+    this.closing = true;
+    void this.socket?.end(undefined);
     console.log('baileys closed');
   }
 
