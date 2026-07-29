@@ -116,5 +116,105 @@ describe('FirebaseAuthStore credentials', () => {
   });
 });
 
+describe('FirebaseAuthStore keys', () => {
+  it('round-trips a key value with Buffers intact', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+
+    await state.keys.set({
+      'pre-key': {
+        '1': { private: Buffer.from([1, 2, 3]), public: Buffer.from([4]) },
+      },
+    } as never);
+
+    const fresh = await new FirebaseAuthStore(new FakeRef(db)).load();
+    const read = await fresh.state.keys.get('pre-key', ['1']);
+
+    expect(Buffer.isBuffer(read['1'].private)).toBe(true);
+    expect(read['1'].private).toEqual(Buffer.from([1, 2, 3]));
+  });
+
+  it('writes each key to its own encoded path', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+
+    await state.keys.set({
+      session: { '5215551234567.1': Buffer.from([9]) },
+    } as never);
+
+    expect([...db.data.keys()]).toContain('keys/session/5215551234567%2E1');
+  });
+
+  it('stores key values as JSON strings', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+
+    await state.keys.set({ 'pre-key': { '7': { id: 7 } } } as never);
+
+    expect(typeof db.data.get('keys/pre-key/7')).toBe('string');
+  });
+
+  it('serves a repeated read from cache without hitting the database', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+    await state.keys.set({ 'pre-key': { '1': { id: 1 } } } as never);
+
+    const fresh = await new FirebaseAuthStore(new FakeRef(db)).load();
+    await fresh.state.keys.get('pre-key', ['1']);
+    const readsAfterFirst = db.reads;
+    await fresh.state.keys.get('pre-key', ['1']);
+
+    expect(db.reads).toBe(readsAfterFirst);
+  });
+
+  it('removes the node when a key is set to null', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+    await state.keys.set({ 'pre-key': { '1': { id: 1 } } } as never);
+    expect(db.data.has('keys/pre-key/1')).toBe(true);
+
+    await state.keys.set({ 'pre-key': { '1': null } } as never);
+
+    expect(db.data.has('keys/pre-key/1')).toBe(false);
+  });
+
+  it('reports a missing key as null', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+
+    const read = await state.keys.get('pre-key', ['does-not-exist']);
+
+    expect(read['does-not-exist']).toBeNull();
+  });
+
+  it('hydrates app-state-sync-key so app state sync can use it', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+    await state.keys.set({
+      'app-state-sync-key': {
+        key1: { keyData: Buffer.from([1]), fingerprint: { rawId: 7 } },
+      },
+    } as never);
+
+    const fresh = await new FirebaseAuthStore(new FakeRef(db)).load();
+    const read = await fresh.state.keys.get('app-state-sync-key', ['key1']);
+
+    // fromObject yields a protobuf message instance, not a bare object
+    expect(read['key1'].constructor.name).toBe('AppStateSyncKeyData');
+    expect(read['key1'].fingerprint.rawId).toBe(7);
+  });
+
+  it('treats a key read failure as a miss instead of throwing', async () => {
+    const db = newDb();
+    const { state } = await new FirebaseAuthStore(new FakeRef(db)).load();
+    // fail only once the creds read is done, so load() itself succeeds
+    db.failReads = true;
+
+    const read = await state.keys.get('pre-key', ['1']);
+
+    expect(read['1']).toBeNull();
+  });
+});
+
 export { FakeRef, newDb };
 export type { FakeDb };
