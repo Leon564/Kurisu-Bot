@@ -83,7 +83,7 @@
     "node": ">=20.19.0"
   },
   "resolutions": {
-    "@distube/ytdl-core": "4.16.12"
+    "@distube/ytdl-core": "github:Leon564/ytdl-core"
   },
   "jest": {
     "moduleFileExtensions": [
